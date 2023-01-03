@@ -10,11 +10,13 @@ import data.LoadedData
 import data.ShipsystemData
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
+import dev.kord.common.entity.optional.optional
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.builder.components.emoji
 import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
+import dev.kord.rest.builder.interaction.boolean
 import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.message.modify.actionRow
 import dev.kord.rest.builder.message.modify.embed
@@ -27,6 +29,7 @@ class ShowShip : BaseCommand()
         kord.createGlobalChatInputCommand(commandID, commandDesc) {
             string("source", "ID or Name of where a ship is from (i.e Starsector)") { required = true}
             string("ship", "name or id of the ship") { required = true}
+            boolean("private", "Causes the message to only show for you.")
         }
     }
 
@@ -36,6 +39,11 @@ class ShowShip : BaseCommand()
         val command = interaction.command
         val modInput = command.strings["source"]!!
         val shipInput = command.strings["ship"]!!
+        var private = false
+        try {
+            private = command.optional().value.booleans["private"]!!
+        }
+        catch (e: Throwable) {}
 
         var modData = LoadedData.LoadedModData.find { it.id == modInput || it.name == modInput } ?: getFuzzyMod(modInput)
         if (modData == null)
@@ -93,8 +101,13 @@ class ShowShip : BaseCommand()
         if (shipData.fighterBays != "") stats += "Fighter Bays: ``${shipData.fighterBays}``\n"
 
         //Do the response to the command
-        interaction.deferPublicResponse().respond {
-
+        val response = when(private)
+        {
+            true -> interaction.deferEphemeralResponse()
+            false -> interaction.deferPublicResponse()
+            else -> interaction.deferPublicResponse()
+        }
+        response.respond {
             embed {
                 title = "Ship: ${shipData.name}"
                 if (shipDescription != null)
@@ -134,13 +147,16 @@ class ShowShip : BaseCommand()
                 this.color = Color(10, 50, 155)
             }
 
-            val emote = ReactionEmoji.Unicode("❌")
-            actionRow {
-                var userdata = ButtonData(interaction.user.data.id.value, "delete_post")
-                this.interactionButton(ButtonStyle.Primary,  Json.encodeToString(ButtonData.serializer(), userdata)) {
-                    this.label = "Delete"
+            if (!private)
+            {
+                val emote = ReactionEmoji.Unicode("❌")
+                actionRow {
+                    var userdata = ButtonData(interaction.user.data.id.value, "delete_post")
+                    this.interactionButton(ButtonStyle.Primary,  Json.encodeToString(ButtonData.serializer(), userdata)) {
+                        this.label = "Delete"
 
-                    emoji(emote)
+                        emoji(emote)
+                    }
                 }
             }
         }

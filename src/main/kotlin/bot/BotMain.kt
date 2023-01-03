@@ -34,7 +34,7 @@ class BotMain
         }
 
         //Load Commands
-        CodexInfo().init(kord, "codex-info", "Show Codex Bot Information")
+        CodexInfo().init(kord, "codex", "Show Codex Bot Information")
         ShowShip().init(kord, "ship", "Displays ship data")
         ShowWeapon().init(kord, "weapon", "Displays weapon data")
         ShowHullmod().init(kord, "hullmod", "Displays weapon data")
