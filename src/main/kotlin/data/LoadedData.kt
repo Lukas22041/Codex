@@ -22,7 +22,7 @@ data class DescriptionsData(var id: String,var type: String, var text1: String, 
 
 @Serializable
 data class HullmodData(var name: String, var id: String, var tags: String, var uiTags: String,
-                       var cost_frigate: String, var cost_dest: String, var cost_cruiser: String, var cost_capital: String, var desc: String)
+                       var cost_frigate: String, var cost_dest: String, var cost_cruiser: String, var cost_capital: String, var desc: String, var short: String)
 
 @Serializable
 data class ShipsystemData(var name: String, var id: String, val active: String, val cooldown: String, val toggle: String)

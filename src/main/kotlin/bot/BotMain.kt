@@ -1,7 +1,6 @@
 package bot
 
-import bot.commands.CodexInfo
-import bot.commands.ShowShip
+import bot.commands.*
 import data.HullmodData
 import data.LoadedData
 import data.ModData
@@ -37,6 +36,9 @@ class BotMain
         //Load Commands
         CodexInfo().init(kord, "codex-info", "Show Codex Bot Information")
         ShowShip().init(kord, "ship", "Displays ship data")
+        ShowWeapon().init(kord, "weapon", "Displays weapon data")
+        ShowHullmod().init(kord, "hullmod", "Displays weapon data")
+        ShowShipsystem().init(kord, "system", "Displays shipsystem data")
 
         kord.on<GuildButtonInteractionCreateEvent> {
             var response = interaction.deferEphemeralResponse()

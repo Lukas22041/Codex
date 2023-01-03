@@ -4,8 +4,10 @@ import bot.ButtonData
 import bot.util.BaseCommand
 import bot.util.CommandUtil.getFuzzyMod
 import bot.util.CommandUtil.getFuzzyShip
+import data.DescriptionsData
 import data.HullmodData
 import data.LoadedData
+import data.ShipsystemData
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.core.Kord
@@ -30,120 +32,115 @@ class ShowShip : BaseCommand()
 
     override suspend fun onCommandUse(interaction: ChatInputCommandInteraction)
     {
+        //Look for Mod and Ship data
         val command = interaction.command
-        val source = command.strings["source"]!!
-        val shipIdentifier = command.strings["ship"]!!
-        var moddata = LoadedData.LoadedModData.find { it.id == source || it.name == source } ?: getFuzzyMod(source)
+        val modInput = command.strings["source"]!!
+        val shipInput = command.strings["ship"]!!
 
-        if (moddata == null)
+        var modData = LoadedData.LoadedModData.find { it.id == modInput || it.name == modInput } ?: getFuzzyMod(modInput)
+        if (modData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "No Mod found by that ID." }
+            interaction.deferEphemeralResponse().respond { content = "Could not find mod going by \"$modInput\"." }
+            return
         }
-        else
+
+        var shipData = LoadedData.LoadedShipData.get(modData.id)!!.find { it.id == shipInput || it.name == shipInput } ?: getFuzzyShip(modData.id, shipInput)
+        if (shipData == null)
         {
-            interaction.deferPublicResponse().respond {
-                var ships = LoadedData.LoadedShipData.get(moddata.id)
-                var ship = ships!!.find { it.id == shipIdentifier || it.name == shipIdentifier } ?: getFuzzyShip(moddata.id, shipIdentifier)
+            interaction.deferEphemeralResponse().respond { content = "No Ship found in ${modData.name} by that id or name." }
+            return
+        }
 
-                if (ship == null)
+        //Setup general data required for the card
+        var shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.id }
+        var hullmodDataList: MutableList<HullmodData> = ArrayList()
+        shipData.builtInMods!!.forEach {
+            hullmodDataList.add(LoadedData.LoadedHullmodData.get(modData.id)!!.find { storedHullmod -> storedHullmod.id == it } ?: return@forEach)  }
+        var shipsystemData = LoadedData.LoadedShipsystemData.get(modData.id)!!.find { it.id == shipData.systemID }
+        var shipsystemDescription: DescriptionsData? = null
+        if (shipsystemData != null) shipsystemDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipsystemData!!.id }
+
+        var weaponSlots = ""
+        if (!shipData.weaponSlots.isNullOrEmpty())
+        {
+            for (weapon in shipData.weaponSlots.toSortedMap()!!)
+            {
+                weaponSlots += "``${weapon.key} x${weapon.value}``\n"
+            }
+        }
+
+        var hullmods = ""
+        hullmodDataList.forEach {hullmod ->
+            hullmods += "``${hullmod.name}``\n"
+        }
+
+        var generalData = ""
+        generalData += "Name: ``${shipData.name}``\n"
+        generalData += "ID: ``${shipData.id}``\n"
+        generalData += "Hullsize: ``${shipData.hullSize.replace("_", " ").lowercase().capitalize()}``\n"
+        generalData += "Ordnance Points: ``${shipData.ordnancePoints}``\n"
+        generalData += "Deployment Points: ``${shipData.deploymentPoints}``\n"
+
+        var stats = ""
+        stats += "Armor Rating: ``${shipData.armorRating}``\n"
+        stats += "Hitpoints Rating: ``${shipData.hitpoints}``\n"
+        stats += "Max Flux: ``${shipData.maxFlux}``\n"
+        stats += "Flux Dissipation: ``${shipData.fluxDissipation}``\n"
+        stats += "Max Speed: ``${shipData.maxSpeed}``\n"
+        stats += "Shield Type: ``${shipData.shieldType.lowercase().capitalize()}``\n"
+        if (shipData.shieldArc != "" && shipData.shieldArc != "0") stats += "Shield Arc: ``${shipData.shieldArc}``\n"
+        if (shipData.shieldEfficiency != "" && shipData.shieldEfficiency != "0") stats += "Shield Efficiency: ``${shipData.shieldEfficiency}``\n"
+        if (shipData.fighterBays != "") stats += "Fighter Bays: ``${shipData.fighterBays}``\n"
+
+        //Do the response to the command
+        interaction.deferPublicResponse().respond {
+
+            embed {
+                title = "Ship: ${shipData.name}"
+                if (shipDescription != null)
                 {
-                    interaction.deferEphemeralResponse().respond { content = "Request Ship could not be found under that source, id or name" }
+                    description = shipDescription.text1
                 }
-                else
+
+                field {
+                    name = "General Data\n"
+                    value = generalData
+                    inline = true
+                }
+
+                field {
+                    name = "Stats"
+                    value = stats
+                    inline = true
+                }
+                if (shipsystemDescription != null && shipsystemDescription!!.text1 != "")
                 {
-                    var shipsystemData = LoadedData.LoadedShipsystemData.get(moddata.id)!!.find { it.id == ship.systemID }
-                    var hullmodsDataList: MutableList<HullmodData> = ArrayList()
+                    field { name = "Shipsystem: ${shipsystemData!!.name}"; value = "``${shipsystemDescription.text1}``" }
+                }
 
-                    var hullmods = ""
-                    if (!ship.builtInMods.isNullOrEmpty())
-                    {
-                        for (hullmod in ship.builtInMods!!)
-                        {
-                            var data = LoadedData.LoadedHullmodData.get(moddata.id)!!.find { it.id == hullmod }
-                            if (data != null)
-                            {
-                                hullmods += "``${data.name}``\n"
-                            }
-                        }
-                    }
+                if (weaponSlots != "")
+                {
+                    field { name = "Weapon Slots"; value = "\n$weaponSlots"; this.inline = true}
+                }
+                if (hullmods != "")
+                {
+                    field { name = "Hullmods"; value = "\n$hullmods"; this.inline = true}
+                }
 
-                    var slots = ""
-                    if (!ship.weaponSlots.isNullOrEmpty())
-                    {
-                        for (weapon in ship.weaponSlots.toSortedMap()!!)
-                        {
-                            slots += "``${weapon.key} x${weapon.value}``\n"
-                        }
-                    }
+                footer {
+                    this.text = "Loaded from ${modData.name} (V${modData.version})"
+                }
 
-                    embed {
-                        title = "Ship: ${ship.name}"
-                        var shipDescription = LoadedData.LoadedDescriptionData.get(moddata.id)!!.find { it.id == ship.id }
-                        if (shipDescription != null)
-                        {
-                            description = shipDescription.text1
-                        }
+                this.color = Color(10, 50, 155)
+            }
 
-                        field {
-                            name = "General Data\n"
-                            value = "Name: ``${ship.name}``\n" +
-                                    "ID: ``${ship.id}``\n" +
-                                    "Hullsize: ``${ship.hullSize.replace("_", " ").lowercase().capitalize()}``\n" +
-                                    "OP: ``${ship.ordnancePoints}``\n" +
-                                    "DP: ``${ship.deploymentPoints}``\n"
-                            inline = true
-                        }
+            val emote = ReactionEmoji.Unicode("❌")
+            actionRow {
+                var userdata = ButtonData(interaction.user.data.id.value, "delete_post")
+                this.interactionButton(ButtonStyle.Primary,  Json.encodeToString(ButtonData.serializer(), userdata)) {
+                    this.label = "Delete"
 
-                        var stats = ""
-                        stats += "Armor Rating: ``${ship.armorRating}``\n"
-                        stats += "Hitpoints Rating: ``${ship.hitpoints}``\n"
-                        stats += "Max Flux: ``${ship.maxFlux}``\n"
-                        stats += "Flux Dissipation: ``${ship.fluxDissipation}``\n"
-                        stats += "Max Speed: ``${ship.maxSpeed}``\n"
-                        stats += "Shield Type: ``${ship.shieldType.lowercase().capitalize()}``\n"
-                        if (ship.shieldArc != "" && ship.shieldArc != "0") stats += "Shield Arc: ``${ship.shieldArc}``\n"
-                        if (ship.shieldEfficiency != "" && ship.shieldEfficiency != "0") stats += "Shield Efficiency: ``${ship.shieldEfficiency}``\n"
-                        if (ship.fighterBays != "") stats += "Fighter Bays**: ``${ship.fighterBays}``\n"
-
-
-                        field {
-                            name = "Stats"
-                            value = stats
-                            inline = true
-                        }
-
-                        var desc = LoadedData.LoadedDescriptionData.get(moddata.id)!!.find { it.id == shipsystemData!!.id }
-                        if (desc != null && desc.text1 != "")
-                        {
-                            var description = desc!!.text1
-                            field { name = "Shipsystem: ${shipsystemData!!.name}"; value = "``$description``" }
-                        }
-
-                        if (slots != "")
-                        {
-                            field { name = "Weapon Slots"; value = "\n$slots"; this.inline = true}
-                        }
-                        if (hullmods != "")
-                        {
-                            field { name = "Hullmods"; value = "\n$hullmods"; this.inline = true}
-                        }
-
-                        footer {
-                            this.text = "Loaded from ${moddata!!.name} (V${moddata.version})"
-                        }
-
-                        this.color = Color(10, 50, 155)
-                    }
-
-                    val emote = ReactionEmoji.Unicode("❌")
-                    actionRow {
-                        var userdata = ButtonData(interaction.user.data.id.value, "delete_post")
-                        this.interactionButton(ButtonStyle.Primary,  Json.encodeToString(ButtonData.serializer(), userdata)) {
-                            this.label = "Delete"
-
-                            emoji(emote)
-                        }
-                    }
+                    emoji(emote)
                 }
             }
         }

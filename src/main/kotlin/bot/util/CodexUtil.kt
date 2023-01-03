@@ -1,9 +1,7 @@
 package bot.util
 
 import bot.ButtonData
-import data.LoadedData
-import data.ModData
-import data.ShipData
+import data.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import me.xdrop.fuzzywuzzy.FuzzySearch
@@ -21,26 +19,6 @@ object CommandUtil
     fun buttonJsonToData(data: String) : ButtonData
     {
         return Json.decodeFromString(ButtonData.serializer(), data)
-    }
-
-    fun getFuzzyShip(source: String, shipIdentifier: String) : ShipData?
-    {
-        println("\nAttempting Fuzzy Search for Ship with $shipIdentifier\n")
-        var currentRatio = 0
-        var ship: ShipData? = null
-        for (data in LoadedData.LoadedShipData.get(source)!!)
-        {
-            var ratio = FuzzySearch.ratio(shipIdentifier, data.name)
-            println("Fuzzy: ${data.name}/$ratio")
-            if (ratio > currentRatio && ratio >= 20)
-            {
-                currentRatio = ratio
-                ship = data
-            }
-        }
-        println("Fuzzy Search decided to pick ${ship!!.name}") ?: println("No ship found from Fuzzy\n")
-
-        return ship
     }
 
     fun getFuzzyMod(mod: String) : ModData?
@@ -71,4 +49,86 @@ object CommandUtil
 
         return modData
     }
+
+    fun getFuzzyShip(source: String, shipIdentifier: String) : ShipData?
+    {
+        println("\nAttempting Fuzzy Search for Ship with $shipIdentifier\n")
+        var currentRatio = 0
+        var ship: ShipData? = null
+        for (data in LoadedData.LoadedShipData.get(source)!!)
+        {
+            var ratio = FuzzySearch.ratio(shipIdentifier, data.name)
+            println("Fuzzy: ${data.name}/$ratio")
+            if (ratio > currentRatio && ratio >= 20)
+            {
+                currentRatio = ratio
+                ship = data
+            }
+        }
+        println("Fuzzy Search decided to pick ${ship!!.name}") ?: println("No ship found from Fuzzy\n")
+
+        return ship
+    }
+
+    fun getFuzzyWeapon(source: String, weaponIdentifier: String) : WeaponData?
+    {
+        println("\nAttempting Fuzzy Search for Weapon with $weaponIdentifier\n")
+        var currentRatio = 0
+        var weapon: WeaponData? = null
+        for (data in LoadedData.LoadedWeaponData.get(source)!!)
+        {
+            var ratio = FuzzySearch.ratio(weaponIdentifier, data.name)
+            println("Fuzzy: ${data.name}/$ratio")
+            if (ratio > currentRatio && ratio >= 20)
+            {
+                currentRatio = ratio
+                weapon = data
+            }
+        }
+        println("Fuzzy Search decided to pick ${weapon!!.name}") ?: println("No weapon found from Fuzzy\n")
+
+        return weapon
+    }
+
+    fun getFuzzyHullmod(source: String, hullmodIdentifier: String) : HullmodData?
+    {
+        println("\nAttempting Fuzzy Search for Hullmod with $hullmodIdentifier\n")
+        var currentRatio = 0
+        var hullmod: HullmodData? = null
+        for (data in LoadedData.LoadedHullmodData.get(source)!!)
+        {
+            var ratio = FuzzySearch.ratio(hullmodIdentifier, data.name)
+            println("Fuzzy: ${data.name}/$ratio")
+            if (ratio > currentRatio && ratio >= 20)
+            {
+                currentRatio = ratio
+                hullmod = data
+            }
+        }
+        println("Fuzzy Search decided to pick ${hullmod!!.name}") ?: println("No hullmod found from Fuzzy\n")
+
+        return hullmod
+    }
+
+    fun getFuzzyShipsystem(source: String, systemIdentifier: String) : ShipsystemData?
+    {
+        println("\nAttempting Fuzzy Search for Shipsystem with $systemIdentifier\n")
+        var currentRatio = 0
+        var shipsystem: ShipsystemData? = null
+        for (data in LoadedData.LoadedShipsystemData.get(source)!!)
+        {
+            var ratio = FuzzySearch.ratio(systemIdentifier, data.name)
+            println("Fuzzy: ${data.name}/$ratio")
+            if (ratio > currentRatio && ratio >= 20)
+            {
+                currentRatio = ratio
+                shipsystem = data
+            }
+        }
+        println("Fuzzy Search decided to pick ${shipsystem!!.name}") ?: println("No shipsystem found from Fuzzy\n")
+
+        return shipsystem
+    }
+
+
 }
