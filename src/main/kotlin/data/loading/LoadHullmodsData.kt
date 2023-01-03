@@ -19,7 +19,7 @@ class LoadHullmodsData(var basepath: String, var modID: String)
     private fun loadCSV()
     {
         val file = File(basepath + DataPath.HullmodsCSV)
-        val config = CsvConfiguration(ignoreEmptyLines = true, ignoreUnknownColumns = true, hasHeaderRecord = true, recordSeparator = "\r")
+        val config = CsvConfiguration(ignoreEmptyLines = true, ignoreUnknownColumns = true, hasHeaderRecord = true, )
         val csv = Csv(config)
 
         var test =file.readText()

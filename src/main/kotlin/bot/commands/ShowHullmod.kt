@@ -74,7 +74,6 @@ class ShowHullmod : BaseCommand()
 
             embed {
                 title = "Hullmod: ${hullmodData.name}"
-                    description = hullmodData.short
 
                 field {
                     name = "General Data\n"

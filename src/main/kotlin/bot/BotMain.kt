@@ -22,8 +22,9 @@ import dev.kord.rest.builder.message.modify.embed
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import me.xdrop.fuzzywuzzy.FuzzySearch
+import java.io.File
 
-var token = ClassLoader.getSystemResource("bot-token.txt").readText().trim()
+var token = File("bot-token.txt").readText().trim()
 
 class BotMain
 {

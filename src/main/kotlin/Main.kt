@@ -1,11 +1,13 @@
 import bot.BotMain
 import data.LoadedData
 import data.Loader
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import kotlin.system.measureTimeMillis
 
-suspend fun main(args: Array<String>) {
+fun main(args: Array<String>) {
 
+    if (!File("database/").exists()) File("database/").mkdir()
     val timeInMillis = measureTimeMillis {
         for (file in File("database/").listFiles()!!) {
             if (file.isDirectory) {
@@ -23,6 +25,12 @@ suspend fun main(args: Array<String>) {
 
     var test2 = ""
 
+    runBlocking { startBot() }
+
+}
+
+suspend fun startBot()
+{
     BotMain().init()
 }
 

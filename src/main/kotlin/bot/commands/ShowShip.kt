@@ -61,12 +61,13 @@ class ShowShip : BaseCommand()
 
         //Setup general data required for the card
         var shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.id }
-        var hullmodDataList: MutableList<HullmodData> = ArrayList()
-        shipData.builtInMods!!.forEach {
-            hullmodDataList.add(LoadedData.LoadedHullmodData.get(modData.id)!!.find { storedHullmod -> storedHullmod.id == it } ?: return@forEach)  }
         var shipsystemData = LoadedData.LoadedShipsystemData.get(modData.id)!!.find { it.id == shipData.systemID }
         var shipsystemDescription: DescriptionsData? = null
         if (shipsystemData != null) shipsystemDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipsystemData!!.id }
+
+        var hullmodDataList: MutableList<HullmodData> = ArrayList()
+        shipData.builtInMods!!.forEach {
+            hullmodDataList.add(LoadedData.LoadedHullmodData.get(modData.id)!!.find { storedHullmod -> storedHullmod.id == it } ?: return@forEach)  }
 
         var weaponSlots = ""
         if (!shipData.weaponSlots.isNullOrEmpty())
