@@ -7,7 +7,7 @@ class Loader()
 {
     fun load(basefolder: String)
     {
-        var mod = LoadModInfo().load(basefolder)
+        var mod = LoadModData().load(basefolder)
 
         println("\n\nLoading Data")
         println("Id: ${mod.id}")
@@ -34,6 +34,16 @@ class Loader()
             println(e.printStackTrace())
         }
 
+        //Load Weapons
+        try {
+            LoadWeaponData(basefolder, mod.id).load()
+        }
+        catch (e: Throwable)
+        {
+            println("Failed to load Weapons for ${mod.id}")
+            println(e.printStackTrace())
+        }
+
         //Load Hullmods
         try {
             LoadHullmodsData(basefolder, mod.id).load()
@@ -54,20 +64,7 @@ class Loader()
             println(e.printStackTrace())
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        Cleanup().gather()
 
 
     }

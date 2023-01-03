@@ -77,6 +77,7 @@ class ShowShip : BaseCommand()
                     }
 
                     embed {
+                        title = "Ship: ${ship.name}"
                         var shipDescription = LoadedData.LoadedDescriptionData.get(moddata.id)!!.find { it.id == ship.id }
                         if (shipDescription != null)
                         {
@@ -87,7 +88,9 @@ class ShowShip : BaseCommand()
                             name = "General Data\n"
                             value = "**Name**: ``${ship.name}``\n" +
                                     "**ID**: ``${ship.id}``\n" +
-                                    "**Hullsize**: ``${ship.hullSize.lowercase().capitalize()}``"
+                                    "**Hullsize**: ``${ship.hullSize.replace("_", " ").lowercase().capitalize()}``\n" +
+                                    "**OP**: ``${ship.ordnancePoints}``\n" +
+                                    "**DP**: ``${ship.deploymentPoints}``\n"
                         }
 
                         var desc = LoadedData.LoadedDescriptionData.get(moddata.id)!!.find { it.id == shipsystemData!!.id }

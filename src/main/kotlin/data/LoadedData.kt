@@ -1,5 +1,6 @@
 package data
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -7,7 +8,12 @@ data class ModData(var id: String, var name: String, var version: String)
 
 @Serializable
 data class ShipData(var name: String = "", var id: String = "", var designation: String = "", var systemID: String, var tech: String = "",
-                    var hullSize: String = "", var builtInMods: List<String>? = null, var weaponSlots: Map<String, Int> = HashMap())
+                    var hullSize: String = "", var ordnancePoints: String = "", var deploymentPoints: String = "", var builtInMods: List<String>? = null, var weaponSlots: Map<String, Int> = HashMap())
+
+@Serializable
+data class WeaponData(var name: String, var id: String, val range: String, @SerialName("damage/second") var damagePerSecond: String, @SerialName("damage/shot") var damagePerShot: String,
+                      var emp: String, @SerialName("turn rate") var turnRate: String, @SerialName("OPs") var ordnancePoints: String, @SerialName("energy/shot") var energyPerShot: String,
+                      @SerialName("energy/second") var energyPerSecond: String, var ammo: String,  @SerialName("ammo/sec") var ammoPerSecond: String, @SerialName("type") var damageType: String, var primaryRoleStr: String)
 
 @Serializable
 data class DescriptionsData(var id: String,var type: String, var text1: String, var text2: String, var text3: String, var text4: String)
@@ -26,6 +32,7 @@ object LoadedData
     var LoadedDescriptionData: MutableMap<String, MutableList<DescriptionsData>> = HashMap()
 
     var LoadedShipData: MutableMap<String, MutableList<ShipData>> = HashMap()
+    var LoadedWeaponData: MutableMap<String, MutableList<WeaponData>> = HashMap()
 
     var LoadedHullmodData: MutableMap<String, MutableList<HullmodData>> = HashMap()
     var LoadedShipsystemData: MutableMap<String, MutableList<ShipsystemData>> = HashMap()

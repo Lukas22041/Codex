@@ -6,7 +6,7 @@ import data.ModData
 import kotlinx.serialization.json.Json
 import java.io.File
 
-class LoadModInfo
+class LoadModData
 {
     fun load(basefolder: String) : ModData
     {

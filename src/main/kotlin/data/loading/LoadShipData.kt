@@ -13,7 +13,8 @@ import java.io.File
 class LoadShipData(var basepath: String, var modID: String)
 {
     @Serializable
-    private data class ShipCSVData(var name: String, var id: String, var designation: String, @SerialName("system id") var systemID: String, @SerialName("tech/manufacturer") var tech: String)
+    private data class ShipCSVData(var name: String, var id: String, var designation: String, @SerialName("system id") var systemID: String, @SerialName("tech/manufacturer") var tech: String,
+                                   @SerialName("ordnance points") var ordnancePoints: String, @SerialName("supplies/rec") var deploymentPoints: String)
     @Serializable
     private data class ShipJsonData(var hullId: String, var hullSize: String, var builtInMods: JsonArray? = null, var weaponSlots: JsonArray? = null)
 
@@ -89,7 +90,7 @@ class LoadShipData(var basepath: String, var modID: String)
             var test = weaponSlots
 
             var data = ShipData(id = csv.id, name = csv.name, designation = csv.designation, tech = csv.tech, hullSize = json.hullSize,
-            builtInMods = builtinmods, weaponSlots = weaponSlots, systemID = csv.systemID)
+            builtInMods = builtinmods, weaponSlots = weaponSlots, systemID = csv.systemID, deploymentPoints = csv.deploymentPoints, ordnancePoints = csv.ordnancePoints)
 
             LoadedData.LoadedShipData.getOrPut(modID) { mutableListOf(data) }.add(data)
         }

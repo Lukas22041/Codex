@@ -10,4 +10,9 @@ object DataPath
     var ShipFolder = "/data/hulls"
     var HullmodsCSV = "/data/hullmods/hull_mods.csv"
     var ShipSystemsCSV = "/data/shipsystems/ship_systems.csv"
+
+    var WeaponCSV = "/data/weapons/weapon_data.csv"
+    var WeaponFolder = "/data/weapons"
+
+
 }
