@@ -1,39 +1,25 @@
 package bot
 
 import bot.commands.CodexInfo
-import database.HullmodData
-import database.LoadedData
-import database.ModData
-import database.ShipData
+import data.HullmodData
+import data.LoadedData
+import data.ModData
+import data.ShipData
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
-import dev.kord.common.entity.DiscordPartialEmoji
-import dev.kord.common.entity.optional.OptionalBoolean
 import dev.kord.core.Kord
-import dev.kord.core.behavior.channel.createEmbed
-import dev.kord.core.behavior.interaction.modal
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.builder.components.emoji
 import dev.kord.core.entity.ReactionEmoji
-import dev.kord.core.entity.channel.MessageChannel
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
-import dev.kord.core.event.interaction.GlobalButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildButtonInteractionCreateEvent
-import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
-import dev.kord.core.event.message.MessageCreateEvent
-import dev.kord.core.event.message.ReactionAddEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intent
 import dev.kord.gateway.PrivilegedIntent
-import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.message.modify.actionRow
 import dev.kord.rest.builder.message.modify.embed
-import dev.kord.rest.route.Route
-import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import me.xdrop.fuzzywuzzy.FuzzySearch
 
@@ -48,11 +34,7 @@ class BotMain
         }
 
         //Load Commands
-        CodexInfo().registerCommand(kord, "")
-
-        kord.createGlobalChatInputCommand("codex-info", "Show Codex Bot Information") {
-
-        }
+        CodexInfo().init(kord, "codex-info", "Show Codex Bot Information")
 
         kord.createGlobalChatInputCommand("ship", "Displays ship data") {
             string("source", "ID or Name of where a ship is from (i.e Starsector)") { required = true}
@@ -64,32 +46,7 @@ class BotMain
 
             when (command.rootName)
             {
-                "codex-info" ->
-                {
-                    val response = interaction.deferPublicResponse()
-                    response.respond {
 
-                        var list = ""
-                        for (mod in LoadedData.LoadedModData)
-                        {
-                            list += "``${mod.name} (ID: ${mod.id})``\n"
-                        }
-                        embed {
-                            title = "Info"
-                            description = "Codex is a bot that can display a variety of data from Starsector and mods. Only mods listed below are included. If you want your mod to be part of the bot, " +
-                                    "message @Lukas04#0856 on Discord."
-
-                            field {
-                                name = "Loaded Mods"
-                                value = list
-                            }
-
-                            footer {
-                                text = "Bot by @Lukas04#0856"
-                            }
-                        }
-                    }
-                }
                 "ship" ->
                 {
 
