@@ -86,11 +86,30 @@ class ShowShip : BaseCommand()
 
                         field {
                             name = "General Data\n"
-                            value = "**Name**: ``${ship.name}``\n" +
-                                    "**ID**: ``${ship.id}``\n" +
-                                    "**Hullsize**: ``${ship.hullSize.replace("_", " ").lowercase().capitalize()}``\n" +
-                                    "**OP**: ``${ship.ordnancePoints}``\n" +
-                                    "**DP**: ``${ship.deploymentPoints}``\n"
+                            value = "Name: ``${ship.name}``\n" +
+                                    "ID: ``${ship.id}``\n" +
+                                    "Hullsize: ``${ship.hullSize.replace("_", " ").lowercase().capitalize()}``\n" +
+                                    "OP: ``${ship.ordnancePoints}``\n" +
+                                    "DP: ``${ship.deploymentPoints}``\n"
+                            inline = true
+                        }
+
+                        var stats = ""
+                        stats += "Armor Rating: ``${ship.armorRating}``\n"
+                        stats += "Hitpoints Rating: ``${ship.hitpoints}``\n"
+                        stats += "Max Flux: ``${ship.maxFlux}``\n"
+                        stats += "Flux Dissipation: ``${ship.fluxDissipation}``\n"
+                        stats += "Max Speed: ``${ship.maxSpeed}``\n"
+                        stats += "Shield Type: ``${ship.shieldType.lowercase().capitalize()}``\n"
+                        if (ship.shieldArc != "" && ship.shieldArc != "0") stats += "Shield Arc: ``${ship.shieldArc}``\n"
+                        if (ship.shieldEfficiency != "" && ship.shieldEfficiency != "0") stats += "Shield Efficiency: ``${ship.shieldEfficiency}``\n"
+                        if (ship.fighterBays != "") stats += "Fighter Bays**: ``${ship.fighterBays}``\n"
+
+
+                        field {
+                            name = "Stats"
+                            value = stats
+                            inline = true
                         }
 
                         var desc = LoadedData.LoadedDescriptionData.get(moddata.id)!!.find { it.id == shipsystemData!!.id }

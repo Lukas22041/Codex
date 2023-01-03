@@ -8,7 +8,9 @@ data class ModData(var id: String, var name: String, var version: String)
 
 @Serializable
 data class ShipData(var name: String = "", var id: String = "", var designation: String = "", var systemID: String, var tech: String = "",
-                    var hullSize: String = "", var ordnancePoints: String = "", var deploymentPoints: String = "", var builtInMods: List<String>? = null, var weaponSlots: Map<String, Int> = HashMap())
+                    var hullSize: String = "", var ordnancePoints: String = "", var deploymentPoints: String = "", var builtInMods: List<String>? = null, var weaponSlots: Map<String, Int> = HashMap(),
+                    var hitpoints: String = "", var armorRating: String = "", var maxFlux: String = "", var fluxDissipation: String = "",
+                    var fighterBays: String = "", var maxSpeed: String = "", var shieldType: String = "", var shieldArc: String = "", var shieldEfficiency: String = "")
 
 @Serializable
 data class WeaponData(var name: String, var id: String, val range: String, @SerialName("damage/second") var damagePerSecond: String, @SerialName("damage/shot") var damagePerShot: String,

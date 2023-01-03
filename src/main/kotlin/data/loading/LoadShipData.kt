@@ -14,7 +14,10 @@ class LoadShipData(var basepath: String, var modID: String)
 {
     @Serializable
     private data class ShipCSVData(var name: String, var id: String, var designation: String, @SerialName("system id") var systemID: String, @SerialName("tech/manufacturer") var tech: String,
-                                   @SerialName("ordnance points") var ordnancePoints: String, @SerialName("supplies/rec") var deploymentPoints: String)
+                                   @SerialName("ordnance points") var ordnancePoints: String, @SerialName("supplies/rec") var deploymentPoints: String, var hitpoints: String,
+                                   @SerialName("armor rating") var armorRating: String, @SerialName("max flux") var maxFlux: String, @SerialName("flux dissipation") var fluxDissipation: String,
+                                   @SerialName("fighter bays") var fighterBays: String, @SerialName("max speed") var maxSpeed: String, @SerialName("shield type") var shieldType: String,
+                                   @SerialName("shield arc") var shieldArc: String, @SerialName("shield efficiency") var shieldEfficiency: String)
     @Serializable
     private data class ShipJsonData(var hullId: String, var hullSize: String, var builtInMods: JsonArray? = null, var weaponSlots: JsonArray? = null)
 
@@ -90,7 +93,9 @@ class LoadShipData(var basepath: String, var modID: String)
             var test = weaponSlots
 
             var data = ShipData(id = csv.id, name = csv.name, designation = csv.designation, tech = csv.tech, hullSize = json.hullSize,
-            builtInMods = builtinmods, weaponSlots = weaponSlots, systemID = csv.systemID, deploymentPoints = csv.deploymentPoints, ordnancePoints = csv.ordnancePoints)
+            builtInMods = builtinmods, weaponSlots = weaponSlots, systemID = csv.systemID, deploymentPoints = csv.deploymentPoints, ordnancePoints = csv.ordnancePoints,
+            hitpoints = csv.hitpoints, armorRating = csv.armorRating, maxFlux = csv.maxFlux, fluxDissipation = csv.fluxDissipation, fighterBays = csv.fighterBays, maxSpeed = csv.maxSpeed,
+            shieldArc = csv.shieldArc, shieldType = csv.shieldType, shieldEfficiency = csv.shieldEfficiency)
 
             LoadedData.LoadedShipData.getOrPut(modID) { mutableListOf(data) }.add(data)
         }

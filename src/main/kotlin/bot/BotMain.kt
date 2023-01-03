@@ -46,9 +46,6 @@ class BotMain
             if (buttonData.buttonID == "delete_post")
             {
                 response.respond {
-                    println(interaction.message.asMessage().data.author.id.value)
-                    println(interaction.user.memberData.userId.value)
-
                     if (buttonData.user == interaction.user.memberData.userId.value)
                     {
                         content = "Removed Message"
