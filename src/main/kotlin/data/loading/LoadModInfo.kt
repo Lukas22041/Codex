@@ -10,7 +10,7 @@ class LoadModInfo
 {
     fun load(basefolder: String) : ModData
     {
-        if (basefolder == "data/starsector-core")
+        if (basefolder == "database/starsector-core")
         {
             var data = ModData("starsector", "Starsector", "0.95.1a")
             LoadedData.LoadedModData.add(data)
