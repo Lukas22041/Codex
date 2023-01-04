@@ -26,6 +26,5 @@ class LoadHullmodsData(var basepath: String, var modID: String)
         var test2 = ""
         var data = csv.decodeFromString(ListSerializer(HullmodData.serializer()), file.readText())
         LoadedData.LoadedHullmodData.put(modID, data.toMutableList())
-        println("Loaded hullmods for $modID")
     }
 }

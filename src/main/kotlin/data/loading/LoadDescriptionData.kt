@@ -30,6 +30,5 @@ class LoadDescriptionData(var basepath: String, var modID: String)
 
         var data = csv.decodeFromString(ListSerializer(DescriptionsData.serializer()), file.readText())
         LoadedData.LoadedDescriptionData.put(modID, data.toMutableList())
-        println("Loaded descriptions for $modID")
     }
 }

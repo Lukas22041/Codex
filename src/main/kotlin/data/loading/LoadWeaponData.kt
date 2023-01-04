@@ -29,6 +29,5 @@ class LoadWeaponData(var basepath: String, var modID: String)
 
         var data = csv.decodeFromString(ListSerializer(WeaponData.serializer()), file.readText())
         LoadedData.LoadedWeaponData.put(modID, data.toMutableList())
-        println("Loaded weapons for $modID")
     }
 }

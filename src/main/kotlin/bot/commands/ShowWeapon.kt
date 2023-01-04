@@ -72,7 +72,7 @@ class ShowWeapon : BaseCommand()
         if (weaponData.damagePerSecond != "") stats += "Damage/Second: ``${weaponData.damagePerSecond}``\n"
         if (weaponData.damagePerShot != "") stats += "Damage/Shot: ``${weaponData.damagePerShot}``\n"
         if (weaponData.energyPerSecond != "") stats += "Energy/Second: ``${weaponData.energyPerSecond}``\n"
-        if (weaponData.energyPerShot != "") stats += "Energy/Shot: ``${weaponData.energyPerShot}``\n"
+        if (weaponData.energyPerShot != "" && weaponData.energyPerShot != "0") stats += "Energy/Shot: ``${weaponData.energyPerShot}``\n"
         if (weaponData.emp != "") stats += "EMP: ``${weaponData.emp}``\n"
         if (weaponData.ammo != "") stats += "Ammo: ``${weaponData.ammo}``\n"
         if (weaponData.ammoPerSecond != "") stats += "Ammo/Second: ``${weaponData.ammoPerSecond}``\n"

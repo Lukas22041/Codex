@@ -1,6 +1,9 @@
 package data.loading
 
 import data.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,9 +29,10 @@ class LoadShipData(var basepath: String, var modID: String)
 
     fun load()
     {
-        loadCSV()
-
-        loadJson()
+        runBlocking {
+            launch(Dispatchers.IO) { loadCSV() }
+            launch(Dispatchers.IO) { loadJson() }
+        }
 
         combine()
     }
@@ -52,7 +56,6 @@ class LoadShipData(var basepath: String, var modID: String)
                 try {
                     var data = Json { this.encodeDefaults = true; ignoreUnknownKeys = true}.decodeFromString<ShipJsonData>(ShipJsonData.serializer(), file.readText())
                     JsonData.add(data)
-                    //println(data)
                 }
                 catch (e: Throwable)
                 {
@@ -99,6 +102,5 @@ class LoadShipData(var basepath: String, var modID: String)
 
             LoadedData.LoadedShipData.getOrPut(modID) { mutableListOf(data) }.add(data)
         }
-        println("Loaded Ships for $modID")
     }
 }

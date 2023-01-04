@@ -88,11 +88,11 @@ class ShowShip : BaseCommand()
         generalData += "ID: ``${shipData.id}``\n"
         generalData += "Hullsize: ``${shipData.hullSize.replace("_", " ").lowercase().capitalize()}``\n"
         generalData += "Ordnance Points: ``${shipData.ordnancePoints}``\n"
-        generalData += "Deployment Points: ``${shipData.deploymentPoints}``\n"
+        if (shipData.deploymentPoints != "") generalData += "Deployment Points: ``${shipData.deploymentPoints}``\n"
 
         var stats = ""
         stats += "Armor Rating: ``${shipData.armorRating}``\n"
-        stats += "Hitpoints Rating: ``${shipData.hitpoints}``\n"
+        stats += "Hitpoints: ``${shipData.hitpoints}``\n"
         stats += "Max Flux: ``${shipData.maxFlux}``\n"
         stats += "Flux Dissipation: ``${shipData.fluxDissipation}``\n"
         stats += "Max Speed: ``${shipData.maxSpeed}``\n"

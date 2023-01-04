@@ -24,6 +24,5 @@ class LoadSystemData(var basepath: String, var modID: String)
 
         var data = csv.decodeFromString(ListSerializer(ShipsystemData.serializer()), file.readText())
         LoadedData.LoadedShipsystemData.put(modID, data.toMutableList())
-        println("Loaded Shipsystems for $modID")
     }
 }

@@ -21,12 +21,7 @@ fun main(args: Array<String>) {
 
     println("\nFinished Loading Data in ${timeInMillis}ms")
 
-    var test = LoadedData.LoadedHullmodData
-
-    var test2 = ""
-
     runBlocking { startBot() }
-
 }
 
 suspend fun startBot()
