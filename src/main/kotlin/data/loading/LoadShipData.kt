@@ -26,6 +26,7 @@ class LoadShipData(var basepath: String, var modID: String)
 
     private var CSVData: List<ShipCSVData> = ArrayList()
     private var JsonData: MutableList<ShipJsonData> = ArrayList()
+    var text = ""
 
     fun load()
     {
@@ -43,6 +44,8 @@ class LoadShipData(var basepath: String, var modID: String)
         val file = File(basepath + DataPath.ShipCSV)
         val config = CsvConfiguration(ignoreEmptyLines = true, ignoreUnknownColumns = true, hasHeaderRecord = true, recordSeparator = "\n")
         val csv = Csv(config)
+
+
         CSVData = csv.decodeFromString(ListSerializer(ShipCSVData.serializer()), file.readText())
         //println(CSVData)
     }
@@ -53,8 +56,11 @@ class LoadShipData(var basepath: String, var modID: String)
         for (file in File(basepath + DataPath.ShipFolder).listFiles()!!) {
             if (file.extension == "ship")
             {
+                text = file.readText()
+                while (text.indexOf('#') != -1) removeComments()
+
                 try {
-                    var data = Json { this.encodeDefaults = true; ignoreUnknownKeys = true}.decodeFromString<ShipJsonData>(ShipJsonData.serializer(), file.readText())
+                    var data = Json { this.encodeDefaults = true; ignoreUnknownKeys = true}.decodeFromString<ShipJsonData>(ShipJsonData.serializer(), text)
                     JsonData.add(data)
                 }
                 catch (e: Throwable)
@@ -101,6 +107,35 @@ class LoadShipData(var basepath: String, var modID: String)
             shieldArc = csv.shieldArc, shieldType = csv.shieldType, shieldEfficiency = csv.shieldEfficiency)
 
             LoadedData.LoadedShipData.getOrPut(modID) { mutableListOf(data) }.add(data)
+        }
+    }
+
+    fun removeComments()
+    {
+
+        var index = text.indexOf("#")
+        if (index == -1) return
+
+
+        if (text.contains("#"))
+        {
+            //if (index == -1) return
+            for (i in index until text.length)
+            {
+                try {
+                    if (text.substring(i, i+1) == "\n")
+                    {
+
+                        var toReplace = text.substring(index, i)
+                        text = text.replace(toReplace, "")
+                        //println(text)
+                        return
+                    }
+                }
+                catch (e: Throwable) {
+                    //println("error")
+                }
+            }
         }
     }
 }

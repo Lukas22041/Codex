@@ -62,6 +62,12 @@ class ShowShip : BaseCommand()
         //Setup general data required for the card
         var shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.id }
         var shipsystemData = LoadedData.LoadedShipsystemData.get(modData.id)!!.find { it.id == shipData.systemID }
+        if (shipsystemData == null)
+        {
+            var allSystems = LoadedData.LoadedShipsystemData.flatMap { it.value }
+            shipsystemData = allSystems.find { it.id == shipData.systemID }
+        }
+
         var shipsystemDescription: DescriptionsData? = null
         if (shipsystemData != null) shipsystemDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipsystemData!!.id }
 
