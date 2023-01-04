@@ -13,13 +13,19 @@ fun main(args: Array<String>) {
             if (file.isDirectory) {
                 var test = file.name
                 Loader().load("database/" + file.name)
-
-                continue
             }
         }
     }
 
-    println("\nFinished Loading Data in ${timeInMillis}ms")
+    println("\nFinished Loading Data in ${timeInMillis}ms for ${LoadedData.LoadedModData.size} mods")
+
+    var test1= LoadedData.LoadedShipData
+    var test2= LoadedData.LoadedWeaponData
+    var test3= LoadedData.LoadedHullmodData
+    var test4= LoadedData.LoadedShipsystemData
+    var test5= LoadedData.LoadedDescriptionData
+
+    var test6= ""
 
     runBlocking { startBot() }
 }

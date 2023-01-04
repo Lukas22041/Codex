@@ -36,7 +36,7 @@ class CodexInfo : BaseCommand()
             var list = ""
             for (mod in LoadedData.LoadedModData)
             {
-                list += "``${mod.name} (ID: ${mod.id})``\n"
+                list += "``${mod.name}``\n"
             }
             embed {
                 title = "Info"

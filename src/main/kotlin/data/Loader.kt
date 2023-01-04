@@ -8,14 +8,25 @@ class Loader()
 {
     fun load(basefolder: String)
     {
-        var mod = LoadModData().load(basefolder)
+        var mod: ModData? = null
+        try {
+            mod = LoadModData().load(basefolder)
+        }
+        catch (e: Throwable)
+        {
+            println("\nFailed to load Mod in path $basefolder")
+            println(e.printStackTrace())
+            return
+        }
+
+        if (mod == null) return
 
         println("\n\nLoading Data")
-        println("Id: ${mod.id}")
+        println("Id: ${mod!!.id}")
         println("Name: ${mod.name}")
         println("Version: ${mod.version}")
 
-        runBlocking {
+        var job = runBlocking {
 
             //Load Description
             launch(Dispatchers.IO) {
@@ -43,7 +54,7 @@ class Loader()
                 catch (e: Throwable)
                 {
                     println("Failed to load Ships for ${mod.id}")
-                    println(e.printStackTrace())
+                    //println(e.printStackTrace())
                 }
             }
 
@@ -60,7 +71,7 @@ class Loader()
                 catch (e: Throwable)
                 {
                     println("Failed to load Weapons for ${mod.id}")
-                    println(e.printStackTrace())
+                    //println(e.printStackTrace())
                 }
             }
             //Load Hullmods
@@ -71,12 +82,12 @@ class Loader()
                         var list = LoadedData.LoadedHullmodData.get(mod.id)
                         list!!.forEach { data -> if (data.id == "" || data.name.contains("#") || data.name == "") removalList.add(data) }
                         LoadedData.LoadedHullmodData.get(mod.id)!!.removeAll(removalList) }
-                    println("Loaded hullmods for ${mod.id} in ${timeInMillis}ms")
+                    println("Loaded ${LoadedData.LoadedHullmodData.get(mod.id)!!.size} hullmods for ${mod.id} in ${timeInMillis}ms")
                 }
                 catch (e: Throwable)
                 {
                     println("Failed to load Hullmods for ${mod.id}")
-                    println(e.printStackTrace())
+                    //println(e.printStackTrace())
                 }
             }
             //Load Systems
@@ -92,9 +103,10 @@ class Loader()
                 catch (e: Throwable)
                 {
                     println("Failed to load Shipsystems for ${mod.id}")
-                    println(e.printStackTrace())
+                    //println(e.printStackTrace())
                 }
             }
         }
+        job.onJoin
     }
 }

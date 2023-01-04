@@ -9,8 +9,6 @@ import java.io.File
 
 class LoadDescriptionData(var basepath: String, var modID: String)
 {
-
-
     fun load()
     {
         loadCSV()
@@ -23,10 +21,6 @@ class LoadDescriptionData(var basepath: String, var modID: String)
         val file = File(basepath + DataPath.DescriptionsCSV)
         val config = CsvConfiguration(ignoreEmptyLines = true, ignoreUnknownColumns = true, hasHeaderRecord = true, recordSeparator = "\n")
         val csv = Csv(config)
-
-        //var text = file.readText().replaceFirst("notes", "notes")
-
-        //println(file.readText())
 
         var data = csv.decodeFromString(ListSerializer(DescriptionsData.serializer()), file.readText())
         LoadedData.LoadedDescriptionData.put(modID, data.toMutableList())

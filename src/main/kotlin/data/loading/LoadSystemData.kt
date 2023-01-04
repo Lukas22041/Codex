@@ -19,7 +19,7 @@ class LoadSystemData(var basepath: String, var modID: String)
     private fun loadCSV()
     {
         val file = File(basepath + DataPath.ShipSystemsCSV)
-        val config = CsvConfiguration(ignoreEmptyLines = true, ignoreUnknownColumns = true, hasHeaderRecord = true)
+        val config = CsvConfiguration(ignoreEmptyLines = true, ignoreUnknownColumns = true, hasHeaderRecord = true, recordSeparator = "\n")
         val csv = Csv(config)
 
         var data = csv.decodeFromString(ListSerializer(ShipsystemData.serializer()), file.readText())
