@@ -65,15 +65,21 @@ class ShowShip : BaseCommand()
         if (shipsystemData == null)
         {
             var allSystems = LoadedData.LoadedShipsystemData.flatMap { it.value }
-            shipsystemData = allSystems.find { it.id == shipData.systemID }
+            shipsystemData = allSystems.find { storedSystem -> storedSystem.id == shipData.systemID }
         }
 
         var shipsystemDescription: DescriptionsData? = null
         if (shipsystemData != null) shipsystemDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipsystemData!!.id }
+        if (shipsystemDescription == null)
+        {
+            var allDescriptions = LoadedData.LoadedDescriptionData.flatMap { it.value }
+            shipsystemDescription = allDescriptions.find { storedDescription -> storedDescription.id == shipData.id }
+        }
 
         var hullmodDataList: MutableList<HullmodData> = ArrayList()
         shipData.builtInMods!!.forEach {
-            hullmodDataList.add(LoadedData.LoadedHullmodData.get(modData.id)!!.find { storedHullmod -> storedHullmod.id == it } ?: return@forEach)  }
+            hullmodDataList.add(LoadedData.LoadedHullmodData.flatMap { it.value }.find { storedHullmod -> storedHullmod.id == it }
+                ?: return@forEach)  }
 
         var weaponSlots = ""
         if (!shipData.weaponSlots.isNullOrEmpty())
