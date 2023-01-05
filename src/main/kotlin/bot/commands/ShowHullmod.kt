@@ -4,6 +4,7 @@ import bot.ButtonData
 import bot.util.BaseCommand
 import bot.util.CommandUtil.getFuzzyHullmod
 import bot.util.CommandUtil.getFuzzyMod
+import bot.util.CommandUtil.trimAfter
 import data.LoadedData
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
@@ -61,7 +62,7 @@ class ShowHullmod : BaseCommand()
         generalData += "Name: ``${hullmodData.name}``\n"
         generalData += "ID: ``${hullmodData.id}``\n"
         generalData += "Ordnance Points: ``${hullmodData.cost_frigate}/${hullmodData.cost_dest}/${hullmodData.cost_cruiser}/${hullmodData.cost_capital}``\n"
-        generalData += "Category: ``${hullmodData.uiTags}``\n"
+        if (hullmodData.uiTags != "") generalData += "Category: ``${hullmodData.uiTags}``\n"
 
         //Do the response to the command
         val response = when(private)
@@ -74,6 +75,9 @@ class ShowHullmod : BaseCommand()
 
             embed {
                 title = "Hullmod: ${hullmodData.name}"
+
+                if (hullmodData.short != "")
+                description = hullmodData.short.trimAfter(500)
 
                 field {
                     name = "General Data\n"

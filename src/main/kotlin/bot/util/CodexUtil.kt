@@ -130,5 +130,16 @@ object CommandUtil
         return shipsystem
     }
 
-
+    /**Removes any character after the cap*/
+    fun String.trimAfter(cap: Int) : String
+    {
+        return if (this.length <= cap)
+        {
+            this
+        }
+        else
+        {
+            this.substring(0, cap).trim() + "... (Cutoff)"
+        }
+    }
 }

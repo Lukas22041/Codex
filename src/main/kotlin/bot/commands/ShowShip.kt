@@ -4,6 +4,7 @@ import bot.ButtonData
 import bot.util.BaseCommand
 import bot.util.CommandUtil.getFuzzyMod
 import bot.util.CommandUtil.getFuzzyShip
+import bot.util.CommandUtil.trimAfter
 import data.DescriptionsData
 import data.HullmodData
 import data.LoadedData
@@ -70,10 +71,10 @@ class ShowShip : BaseCommand()
 
         var shipsystemDescription: DescriptionsData? = null
         if (shipsystemData != null) shipsystemDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipsystemData!!.id }
-        if (shipsystemDescription == null)
+        if (shipsystemDescription == null && shipsystemData != null)
         {
             var allDescriptions = LoadedData.LoadedDescriptionData.flatMap { it.value }
-            shipsystemDescription = allDescriptions.find { storedDescription -> storedDescription.id == shipData.id }
+            shipsystemDescription = allDescriptions.find { storedDescription -> storedDescription.id == shipsystemData.id }
         }
 
         var hullmodDataList: MutableList<HullmodData> = ArrayList()
@@ -125,7 +126,7 @@ class ShowShip : BaseCommand()
                 title = "Ship: ${shipData.name}"
                 if (shipDescription != null)
                 {
-                    description = shipDescription.text1
+                    description = shipDescription.text1.trimAfter(800)
                 }
 
                 field {
@@ -141,7 +142,7 @@ class ShowShip : BaseCommand()
                 }
                 if (shipsystemDescription != null && shipsystemDescription!!.text1 != "")
                 {
-                    field { name = "Shipsystem: ${shipsystemData!!.name}"; value = "``${shipsystemDescription.text1}``" }
+                    field { name = "Shipsystem: ${shipsystemData!!.name}"; value = "``${shipsystemDescription.text1.trimAfter(500)}``" }
                 }
 
                 if (weaponSlots != "")

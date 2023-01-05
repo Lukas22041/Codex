@@ -5,6 +5,7 @@ import bot.util.BaseCommand
 import bot.util.CommandUtil.getFuzzyMod
 import bot.util.CommandUtil.getFuzzyShip
 import bot.util.CommandUtil.getFuzzyWeapon
+import bot.util.CommandUtil.trimAfter
 import data.LoadedData
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
@@ -63,7 +64,11 @@ class ShowWeapon : BaseCommand()
         var generalData = ""
         generalData += "Name: ``${weaponData.name}``\n"
         generalData += "ID: ``${weaponData.id}``\n"
+
+        if (weaponData.size != "") generalData += "\nSize: ``${weaponData.size.lowercase().capitalize()}``\n"
+        if (weaponData.type != "") generalData += "Type: ``${weaponData.type.lowercase().capitalize()}``\n"
         generalData += "Damage Type: ``${weaponData.damageType.lowercase().capitalize()}``\n"
+
         generalData += "Ordnance Points: ``${weaponData.ordnancePoints}``\n"
         if (weaponData.primaryRoleStr != "") generalData += "\nRole: ``${weaponData.primaryRoleStr}``\n"
 
@@ -91,7 +96,7 @@ class ShowWeapon : BaseCommand()
                 title = "Weapon: ${weaponData.name}"
                 if (weaponDescriptionsData != null)
                 {
-                    description = weaponDescriptionsData.text1
+                    description = weaponDescriptionsData.text1.trimAfter(500)
                 }
 
                 field {

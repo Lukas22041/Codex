@@ -58,6 +58,10 @@ class LoadShipData(var basepath: String, var modID: String)
             {
                 text = file.readText()
                 while (text.indexOf('#') != -1) removeComments()
+                val strb: StringBuilder = StringBuilder(text)
+                val index = strb.lastIndexOf(",")
+                strb.replace(index, ",".length + index, "")
+                text = strb.toString()
 
                 try {
                     var data = Json { this.encodeDefaults = true; ignoreUnknownKeys = true}.decodeFromString<ShipJsonData>(ShipJsonData.serializer(), text)

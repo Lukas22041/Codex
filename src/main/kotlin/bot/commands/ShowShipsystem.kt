@@ -4,6 +4,7 @@ import bot.ButtonData
 import bot.util.BaseCommand
 import bot.util.CommandUtil.getFuzzyMod
 import bot.util.CommandUtil.getFuzzyShipsystem
+import bot.util.CommandUtil.trimAfter
 import data.LoadedData
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
@@ -92,7 +93,7 @@ class ShowShipsystem : BaseCommand()
                 title = "Shipsystem: ${systemData.name}"
                 if (systemDescriptionsData != null)
                 {
-                    description = systemDescriptionsData.text1
+                    description = systemDescriptionsData.text1.trimAfter(500)
                 }
 
                 field {
