@@ -99,17 +99,17 @@ class ShowShip : BaseCommand()
         var generalData = ""
         generalData += "Name: ``${shipData.name}``\n"
         generalData += "ID: ``${shipData.id}``\n"
-        generalData += "Hullsize: ``${shipData.hullSize.replace("_", " ").lowercase().capitalize()}``\n"
-        generalData += "Ordnance Points: ``${shipData.ordnancePoints}``\n"
+        if (shipData.hullSize != "") generalData += "Hullsize: ``${shipData.hullSize.replace("_", " ").lowercase().capitalize()}``\n"
+        if (shipData.ordnancePoints != "") generalData += "Ordnance Points: ``${shipData.ordnancePoints}``\n"
         if (shipData.deploymentPoints != "") generalData += "Deployment Points: ``${shipData.deploymentPoints}``\n"
 
         var stats = ""
-        stats += "Armor Rating: ``${shipData.armorRating}``\n"
-        stats += "Hitpoints: ``${shipData.hitpoints}``\n"
-        stats += "Max Flux: ``${shipData.maxFlux}``\n"
-        stats += "Flux Dissipation: ``${shipData.fluxDissipation}``\n"
-        stats += "Max Speed: ``${shipData.maxSpeed}``\n"
-        stats += "Shield Type: ``${shipData.shieldType.lowercase().capitalize()}``\n"
+        if (shipData.armorRating != "") stats += "Armor Rating: ``${shipData.armorRating}``\n"
+        if (shipData.hitpoints != "") stats += "Hitpoints: ``${shipData.hitpoints}``\n"
+        if (shipData.maxFlux != "") stats += "Max Flux: ``${shipData.maxFlux}``\n"
+        if (shipData.fluxDissipation != "") stats += "Flux Dissipation: ``${shipData.fluxDissipation}``\n"
+        if (shipData.maxSpeed != "") stats += "Max Speed: ``${shipData.maxSpeed}``\n"
+        if (shipData.shieldType != "") stats += "Shield Type: ``${shipData.shieldType.lowercase().capitalize()}``\n"
         if (shipData.shieldArc != "" && shipData.shieldArc != "0") stats += "Shield Arc: ``${shipData.shieldArc}``\n"
         if (shipData.shieldEfficiency != "" && shipData.shieldEfficiency != "0") stats += "Shield Efficiency: ``${shipData.shieldEfficiency}``\n"
         if (shipData.fighterBays != "") stats += "Fighter Bays: ``${shipData.fighterBays}``\n"
@@ -126,20 +126,23 @@ class ShowShip : BaseCommand()
                 title = "Ship: ${shipData.name}"
                 if (shipDescription != null)
                 {
-                    description = shipDescription.text1.trimAfter(800)
+                    description = shipDescription.text1.trimAfter(700)
                 }
 
+                if (generalData != "")
                 field {
                     name = "General Data\n"
                     value = generalData
                     inline = true
                 }
 
+                if (stats != "")
                 field {
                     name = "Stats"
                     value = stats
                     inline = true
                 }
+
                 if (shipsystemDescription != null && shipsystemDescription!!.text1 != "")
                 {
                     field { name = "Shipsystem: ${shipsystemData!!.name}"; value = "``${shipsystemDescription.text1.trimAfter(500)}``" }

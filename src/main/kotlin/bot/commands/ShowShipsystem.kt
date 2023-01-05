@@ -76,8 +76,8 @@ class ShowShipsystem : BaseCommand()
         generalData += "Name: ``${systemData.name}``\n"
         generalData += "ID: ``${systemData.id}``\n"
         if (type != "") generalData += "Type: ``$type``\n"
-        generalData += "Active for: ``${systemData.active}s``\n"
-        generalData += "Cooldown: ``${systemData.cooldown}s``\n"
+        if (systemData.active != "") generalData += "Active for: ``${systemData.active}s``\n"
+        if (systemData.cooldown != "") generalData += "Cooldown: ``${systemData.cooldown}s``\n"
         generalData += "Can be toggled: ``$canBeToggled``\n"
 
         //Do the response to the command
@@ -96,6 +96,7 @@ class ShowShipsystem : BaseCommand()
                     description = systemDescriptionsData.text1.trimAfter(500)
                 }
 
+                if (generalData != "")
                 field {
                     name = "General Data\n"
                     value = generalData

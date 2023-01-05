@@ -67,9 +67,9 @@ class ShowWeapon : BaseCommand()
 
         if (weaponData.size != "") generalData += "\nSize: ``${weaponData.size.lowercase().capitalize()}``\n"
         if (weaponData.type != "") generalData += "Type: ``${weaponData.type.lowercase().capitalize()}``\n"
-        generalData += "Damage Type: ``${weaponData.damageType.lowercase().capitalize()}``\n"
+        if (weaponData.damageType != "") generalData += "Damage Type: ``${weaponData.damageType.lowercase().capitalize()}``\n"
 
-        generalData += "Ordnance Points: ``${weaponData.ordnancePoints}``\n"
+        if (weaponData.ordnancePoints != "") generalData += "Ordnance Points: ``${weaponData.ordnancePoints}``\n"
         if (weaponData.primaryRoleStr != "") generalData += "\nRole: ``${weaponData.primaryRoleStr}``\n"
 
         var stats = ""
@@ -94,17 +94,22 @@ class ShowWeapon : BaseCommand()
 
             embed {
                 title = "Weapon: ${weaponData.name}"
-                if (weaponDescriptionsData != null)
+                if (weaponDescriptionsData != null) {
+                    description = weaponDescriptionsData.text1.trimAfter(600)
+                }
+                else
                 {
-                    description = weaponDescriptionsData.text1.trimAfter(500)
+                    description = ""
                 }
 
+                if (generalData != "")
                 field {
                     name = "General Data\n"
                     value = generalData
                     inline = true
                 }
 
+                if (stats != "")
                 field {
                     name = "Stats"
                     value = stats

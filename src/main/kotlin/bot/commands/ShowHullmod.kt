@@ -79,6 +79,7 @@ class ShowHullmod : BaseCommand()
                 if (hullmodData.short != "")
                 description = hullmodData.short.trimAfter(500)
 
+                if (generalData != "")
                 field {
                     name = "General Data\n"
                     value = generalData
