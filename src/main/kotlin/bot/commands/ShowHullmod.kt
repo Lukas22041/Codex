@@ -43,17 +43,19 @@ class ShowHullmod : BaseCommand()
         }
         catch (e: Throwable) {}
 
-        var modData = LoadedData.LoadedModData.find { it.id == modInput || it.name == modInput } ?: getFuzzyMod(modInput)
+        var modData = LoadedData.LoadedModData.find { it.id.lowercase() == modInput.lowercase() || it.name.lowercase() == modInput.lowercase() }
+        if (modData == null) modData = getFuzzyMod(modInput)
         if (modData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "Could not find mod going by \"$modInput\"." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bots database. Use /codex to look for available mods." }
             return
         }
 
-        var hullmodData = LoadedData.LoadedHullmodData.get(modData.id)!!.find { it.id == hullmodInput || it.name == hullmodInput } ?: getFuzzyHullmod(modData.id, hullmodInput)
+        var hullmodData = LoadedData.LoadedHullmodData.get(modData.id)!!.find { it.id.lowercase() == hullmodInput.lowercase() || it.name.lowercase() == hullmodInput.lowercase() }
+        if (hullmodData == null) hullmodData = getFuzzyHullmod(modData.id, hullmodInput)
         if (hullmodData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "No Hullmod found in ${modData.name} by that id or name." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find hullmod going by \"$hullmodInput\" in ${modData.name}" }
             return
         }
 

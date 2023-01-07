@@ -30,6 +30,8 @@ class BotMain
 {
     suspend fun init()
     {
+
+        File("TEST").createNewFile()
         var kord = Kord(token) {
 
         }

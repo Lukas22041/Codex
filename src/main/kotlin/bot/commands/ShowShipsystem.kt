@@ -43,17 +43,19 @@ class ShowShipsystem : BaseCommand()
         }
         catch (e: Throwable) {}
 
-        var modData = LoadedData.LoadedModData.find { it.id == modInput || it.name == modInput } ?: getFuzzyMod(modInput)
+        var modData = LoadedData.LoadedModData.find { it.id.lowercase() == modInput.lowercase() || it.name.lowercase() == modInput.lowercase() }
+        if (modData == null) modData = getFuzzyMod(modInput)
         if (modData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "Could not find mod going by \"$modInput\"." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bots database. Use /codex to look for available mods." }
             return
         }
 
-        var systemData = LoadedData.LoadedShipsystemData.get(modData.id)!!.find { it.id == systemInput || it.name == systemInput } ?: getFuzzyShipsystem(modData.id, systemInput)
+        var systemData = LoadedData.LoadedShipsystemData.get(modData.id)!!.find { it.id.lowercase() == systemInput.lowercase() || it.name.lowercase() == systemInput.lowercase() }
+        if (systemData == null) systemData = getFuzzyShipsystem(modData.id, systemInput)
         if (systemData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "No Shipsystem found in ${modData.name} by that id or name." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find shipsystem going by \"$systemInput\" in ${modData.name}" }
             return
         }
 

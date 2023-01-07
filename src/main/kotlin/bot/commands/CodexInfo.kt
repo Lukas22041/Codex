@@ -33,20 +33,22 @@ class CodexInfo : BaseCommand()
         }
         response.respond {
 
-            var list = ""
+            var list = "``"
             for (mod in LoadedData.LoadedModData)
             {
-                list += "``${mod.name}``\n"
+                list += "${mod.name}, "
             }
+            var lastComma = list.lastIndexOf(",")
+            list = list.substring(0, lastComma)
+            list = "$list``"
             embed {
                 title = "Info"
-                description = "Codex is a bot that can display a variety of data from Starsector and mods. Only mods listed below are included. If you want your mod to be part of the bot, " +
-                        "message @Lukas04#0856 on Discord."
+                description = "Codex is a bot that dynamically generates a wiki for Starsector and Mod Content by reading through the game files. Only mods listed below are currently included in the bots database."
 
                 field {
                     name = "Loaded Mods"
                     value = list
-                    inline = true
+                    inline = false
                 }
 
                 field {
@@ -55,7 +57,12 @@ class CodexInfo : BaseCommand()
                             "``/weapon <source> <weapon id/name>``\n" +
                             "``/hullmod <source> <hullmod id/name>``\n" +
                             "``/system <source> <system id/name>``\n"
-                    inline = true
+                    inline = false
+                }
+
+                field {
+                    name = "Support"
+                    value = "If you encounter an issue, have a question, or something along those lines, feel free to message <@137237535700156416>"
                 }
 
                 footer {

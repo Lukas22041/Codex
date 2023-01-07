@@ -5,10 +5,7 @@ import bot.util.BaseCommand
 import bot.util.CommandUtil.getFuzzyMod
 import bot.util.CommandUtil.getFuzzyShip
 import bot.util.CommandUtil.trimAfter
-import data.DescriptionsData
-import data.HullmodData
-import data.LoadedData
-import data.ShipsystemData
+import data.*
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.optional.optional
@@ -46,17 +43,19 @@ class ShowShip : BaseCommand()
         }
         catch (e: Throwable) {}
 
-        var modData = LoadedData.LoadedModData.find { it.id == modInput || it.name == modInput } ?: getFuzzyMod(modInput)
+        var modData = LoadedData.LoadedModData.find { it.id.lowercase() == modInput.lowercase() || it.name.lowercase() == modInput.lowercase() }
+        if (modData == null) modData = getFuzzyMod(modInput)
         if (modData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "Could not find mod going by \"$modInput\"." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bots database. Use /codex to look for available mods." }
             return
         }
 
-        var shipData = LoadedData.LoadedShipData.get(modData.id)!!.find { it.id == shipInput || it.name == shipInput } ?: getFuzzyShip(modData.id, shipInput)
+        var shipData = LoadedData.LoadedShipData.get(modData.id)!!.find { it.id.lowercase() == shipInput.lowercase() || it.name.lowercase() == shipInput.lowercase() }
+        if (shipData == null) shipData = getFuzzyShip(modData.id, shipInput)
         if (shipData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "No Ship found in ${modData.name} by that id or name." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find ship going by \"$shipInput\" in ${modData.name}" }
             return
         }
 

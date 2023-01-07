@@ -44,17 +44,19 @@ class ShowWeapon : BaseCommand()
         }
         catch (e: Throwable) {}
 
-        var modData = LoadedData.LoadedModData.find { it.id == modInput || it.name == modInput } ?: getFuzzyMod(modInput)
+        var modData = LoadedData.LoadedModData.find { it.id.lowercase() == modInput.lowercase() || it.name.lowercase() == modInput.lowercase() }
+        if (modData == null) modData = getFuzzyMod(modInput)
         if (modData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "Could not find mod going by \"$modInput\"." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bots database. Use /codex to look for available mods." }
             return
         }
 
-        var weaponData = LoadedData.LoadedWeaponData.get(modData.id)!!.find { it.id == weaponInput || it.name == weaponInput } ?: getFuzzyWeapon(modData.id, weaponInput)
+        var weaponData = LoadedData.LoadedWeaponData.get(modData.id)!!.find { it.id.lowercase() == weaponInput.lowercase() || it.name.lowercase() == weaponInput.lowercase() }
+        if (weaponData == null) weaponData = getFuzzyWeapon(modData.id, weaponInput)
         if (weaponData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "No Weapon found in ${modData.name} by that id or name." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find weapon going by \"$weaponInput\" in ${modData.name}" }
             return
         }
 
