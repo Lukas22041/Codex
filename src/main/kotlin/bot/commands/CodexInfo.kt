@@ -46,12 +46,6 @@ class CodexInfo : BaseCommand()
                 description = "Codex is a bot that dynamically generates a wiki for Starsector and Mod Content by reading through the game files. Only mods listed below are currently included in the bots database."
 
                 field {
-                    name = "Loaded Mods"
-                    value = list
-                    inline = false
-                }
-
-                field {
                     name = "Commands"
                     value = "``/ship <source> <ship id/name>``\n" +
                             "``/weapon <source> <weapon id/name>``\n" +
@@ -61,8 +55,14 @@ class CodexInfo : BaseCommand()
                 }
 
                 field {
-                    name = "Support"
-                    value = "If you encounter an issue, have a question, or something along those lines, feel free to message <@137237535700156416>"
+                    name = "Adding Mods & Support"
+                    value = "If you are a mod author and want your mod added, or if you encounter an issue, have a question, or something along those lines, please message <@137237535700156416> in a private DM."
+                }
+
+                field {
+                    name = "Loaded Mods"
+                    value = list
+                    inline = false
                 }
 
                 footer {

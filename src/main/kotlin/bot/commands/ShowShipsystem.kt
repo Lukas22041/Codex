@@ -47,7 +47,7 @@ class ShowShipsystem : BaseCommand()
         if (modData == null) modData = getFuzzyMod(modInput)
         if (modData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bots database. Use /codex to look for available mods." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bot's database. Use /codex to look for available mods." }
             return
         }
 
