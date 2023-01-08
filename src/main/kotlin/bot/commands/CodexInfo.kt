@@ -43,7 +43,7 @@ class CodexInfo : BaseCommand()
             list = "$list``"
             embed {
                 title = "Info"
-                description = "Codex is a bot that dynamically generates a wiki for Starsector and Mod Content by reading through the game files. Only mods listed in the \"Loaded Content\" section are currently included in the bots database."
+                description = "Codex is a bot that shows information about Starsector and the Content of different Mods by reading through the game files. Only mods listed in the \"Loaded Content\" section are currently included in the bots database."
 
                 field {
                     name = "Commands"

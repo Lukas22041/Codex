@@ -48,7 +48,7 @@ class ShowWeapon : BaseCommand()
         if (modData == null) modData = getFuzzyMod(modInput)
         if (modData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bot's database. Use /codex to look for available mods." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bot's database. Mods are only included by the author's request. Use /codex to search available mods." }
             return
         }
 

@@ -13,7 +13,6 @@ fun main(args: Array<String>) {
     val timeInMillis = measureTimeMillis {
         for (file in File("database/").listFiles()!!) {
             if (file.isDirectory) {
-                var test = file.name
                 Loader().load("database/" + file.name)
             }
         }
