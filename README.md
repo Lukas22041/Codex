@@ -1,4 +1,4 @@
-Repository for a Starsector Discord bot.
+A Discord bot that dynamicly loads data from starsector and mods..
 
 If you want to run the bot on your own, requires a "bot-token.txt" file including only your bots token in the same folder as the jar.
 Also requires a "database" folder, located in the location of the jar. 
