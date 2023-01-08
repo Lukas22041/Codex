@@ -1,4 +1,7 @@
-A Discord bot that dynamicly loads data from starsector and mods..
+# Codex
+
+A Discord bot that dynamicly loads data from starsector and mods.
+The Bot is made by using the "Kord" Library and written fully in Kotlin.
 
 If you want to run the bot on your own, requires a "bot-token.txt" file including only your bots token in the same folder as the jar.
 Also requires a "database" folder, located in the location of the jar. 
