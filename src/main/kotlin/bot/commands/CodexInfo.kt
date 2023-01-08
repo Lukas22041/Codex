@@ -60,7 +60,7 @@ class CodexInfo : BaseCommand()
                 }
 
                 field {
-                    name = "Loaded Mods"
+                    name = "Loaded Content"
                     value = list
                     inline = false
                 }
