@@ -2,8 +2,11 @@ package bot.commands
 
 import bot.ButtonData
 import bot.util.BaseCommand
+import bot.util.CommandUtil
+import bot.util.CommandUtil.addDeleteButton
 import bot.util.CommandUtil.getFuzzyHullmod
 import bot.util.CommandUtil.getFuzzyMod
+import bot.util.CommandUtil.loadModData
 import bot.util.CommandUtil.trimAfter
 import data.LoadedData
 import dev.kord.common.Color
@@ -43,14 +46,13 @@ class ShowHullmod : BaseCommand()
         }
         catch (e: Throwable) {}
 
-        var modData = LoadedData.LoadedModData.find { it.id.lowercase() == modInput.lowercase() || it.name.lowercase() == modInput.lowercase() }
-        if (modData == null) modData = getFuzzyMod(modInput)
-        if (modData == null)
+        var modData = CommandUtil.loadModData(modInput, interaction) ?: return
+
+        if (LoadedData.LoadedHullmodData.get(modData.id).isNullOrEmpty())
         {
-            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bot's database. Mods are only included by the author's request. Use /codex to search available mods." }
+            interaction.deferEphemeralResponse().respond { content = "Requested mod \"${modData.name}\" has no hullmods." }
             return
         }
-
         var hullmodData = LoadedData.LoadedHullmodData.get(modData.id)!!.find { it.id.lowercase() == hullmodInput.lowercase() || it.name.lowercase() == hullmodInput.lowercase() }
         if (hullmodData == null) hullmodData = getFuzzyHullmod(modData.id, hullmodInput)
         if (hullmodData == null)
@@ -96,15 +98,7 @@ class ShowHullmod : BaseCommand()
 
             if (!private)
             {
-                val emote = ReactionEmoji.Unicode("❌")
-                actionRow {
-                    var userdata = ButtonData(interaction.user.data.id.value, "delete_post")
-                    this.interactionButton(ButtonStyle.Primary,  Json.encodeToString(ButtonData.serializer(), userdata)) {
-                        this.label = "Delete"
-
-                        emoji(emote)
-                    }
-                }
+                addDeleteButton(this, interaction)
             }
         }
     }

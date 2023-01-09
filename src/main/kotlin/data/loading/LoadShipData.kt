@@ -84,10 +84,11 @@ class LoadShipData(var basepath: String, var modID: String)
             var weaponSlots: MutableMap<String, Int> = HashMap()
             if (json!!.weaponSlots != null)
             {
-                for (weapon in json.weaponSlots!!)
+                for (mount in json.weaponSlots!!)
                 {
-                    var type = (weapon.jsonObject.get("type").toString()).replace("\"", "").trim().lowercase().capitalize()
-                    var size = weapon.jsonObject.get("size").toString().replace("\"", "").trim().lowercase().capitalize()
+                    if (mount.jsonObject.get("mount").toString().lowercase().contains("hidden")) continue
+                    var type = (mount.jsonObject.get("type").toString()).replace("\"", "").trim().lowercase().capitalize()
+                    var size = mount.jsonObject.get("size").toString().replace("\"", "").trim().lowercase().capitalize()
 
                     var text = "$size-$type"
                     weaponSlots.put(text, weaponSlots.get(text)?.plus(1) ?: 1)

@@ -18,6 +18,13 @@ fun main(args: Array<String>) {
         }
     }
 
+    var test = LoadedData.LoadedShipData
+    var test2 = LoadedData.LoadedWeaponData
+    var test3 = LoadedData.LoadedHullmodData
+    var test4 = LoadedData.LoadedShipsystemData
+
+    var test6 = "LoadedData.LoadedWeaponData"
+
     println("\nFinished Loading Data in ${timeInMillis}ms for ${LoadedData.LoadedModData.size} mods")
     runBlocking(Dispatchers.Default) { BotMain().init() }
 }

@@ -7,6 +7,7 @@ import data.ModData
 import data.ShipData
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
+import dev.kord.common.entity.Permission
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.builder.components.emoji
@@ -37,7 +38,7 @@ class BotMain
 
         //Load Commands
         CodexInfo().init(kord, "codex", "Show Codex Bot Information")
-        ShowShip().init(kord, "ship", "Displays ship data")
+        ShowShip().init(kord, "ship", "Displays ship data (Does not currently show skins or variants)")
         ShowWeapon().init(kord, "weapon", "Displays weapon data")
         ShowHullmod().init(kord, "hullmod", "Displays weapon data")
         ShowShipsystem().init(kord, "system", "Displays shipsystem data")
@@ -57,7 +58,7 @@ class BotMain
                     }
                     else
                     {
-                        content = "Lacking permissions to delete message"
+                        content = "Lacking permissions to delete the message. You can only delete messages that you yourself requested."
                     }
                 }
             }

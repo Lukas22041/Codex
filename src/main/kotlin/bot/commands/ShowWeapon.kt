@@ -2,6 +2,7 @@ package bot.commands
 
 import bot.ButtonData
 import bot.util.BaseCommand
+import bot.util.CommandUtil
 import bot.util.CommandUtil.getFuzzyMod
 import bot.util.CommandUtil.getFuzzyShip
 import bot.util.CommandUtil.getFuzzyWeapon
@@ -44,14 +45,12 @@ class ShowWeapon : BaseCommand()
         }
         catch (e: Throwable) {}
 
-        var modData = LoadedData.LoadedModData.find { it.id.lowercase() == modInput.lowercase() || it.name.lowercase() == modInput.lowercase() }
-        if (modData == null) modData = getFuzzyMod(modInput)
-        if (modData == null)
+        var modData = CommandUtil.loadModData(modInput, interaction) ?: return
+        if (LoadedData.LoadedWeaponData.get(modData.id).isNullOrEmpty())
         {
-            interaction.deferEphemeralResponse().respond { content = "Unable to find mod \"$modInput\" in the bot's database. Mods are only included by the author's request. Use /codex to search available mods." }
+            interaction.deferEphemeralResponse().respond { content = "Requested mod \"${modData.name}\" has no weapons." }
             return
         }
-
         var weaponData = LoadedData.LoadedWeaponData.get(modData.id)!!.find { it.id.lowercase() == weaponInput.lowercase() || it.name.lowercase() == weaponInput.lowercase() }
         if (weaponData == null) weaponData = getFuzzyWeapon(modData.id, weaponInput)
         if (weaponData == null)
@@ -127,15 +126,7 @@ class ShowWeapon : BaseCommand()
 
             if (!private)
             {
-                val emote = ReactionEmoji.Unicode("❌")
-                actionRow {
-                    var userdata = ButtonData(interaction.user.data.id.value, "delete_post")
-                    this.interactionButton(ButtonStyle.Primary,  Json.encodeToString(ButtonData.serializer(), userdata)) {
-                        this.label = "Delete"
-
-                        emoji(emote)
-                    }
-                }
+                CommandUtil.addDeleteButton(this, interaction)
             }
         }
     }
