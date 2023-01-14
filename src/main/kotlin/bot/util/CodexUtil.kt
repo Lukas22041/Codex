@@ -49,7 +49,7 @@ object CommandUtil
         for (data in LoadedData.LoadedModData)
         {
             var ratio = FuzzySearch.extractOne(mod, listOf(data.id, data.name, data.name.abbreviate()))
-            if (ratio.score > currentRatio && ratio.score >= 70)
+            if (ratio.score > currentRatio && ratio.score >= 80)
             {
                 currentRatio = ratio.score
                 modData = data
@@ -76,7 +76,7 @@ object CommandUtil
         for (data in LoadedData.LoadedShipData.get(source)!!)
         {
             var ratio = FuzzySearch.extractOne(shipIdentifier, listOf(data.id, data.name))
-            if (ratio.score > currentRatio && ratio.score >= 50)
+            if (ratio.score > currentRatio && ratio.score >= 60)
             {
                 currentRatio = ratio.score
                 ship = data
@@ -95,7 +95,7 @@ object CommandUtil
         for (data in LoadedData.LoadedWeaponData.get(source)!!)
         {
             var ratio = FuzzySearch.extractOne(weaponIdentifier, listOf(data.id, data.name))
-            if (ratio.score > currentRatio && ratio.score >= 50)
+            if (ratio.score > currentRatio && ratio.score >= 60)
             {
                 currentRatio = ratio.score
                 weapon = data
@@ -114,7 +114,7 @@ object CommandUtil
         for (data in LoadedData.LoadedHullmodData.get(source)!!)
         {
             var ratio = FuzzySearch.extractOne(hullmodIdentifier, listOf(data.id, data.name))
-            if (ratio.score > currentRatio && ratio.score >= 50)
+            if (ratio.score > currentRatio && ratio.score >= 60)
             {
                 currentRatio = ratio.score
                 hullmod = data
@@ -133,7 +133,7 @@ object CommandUtil
         for (data in LoadedData.LoadedShipsystemData.get(source)!!)
         {
             var ratio = FuzzySearch.extractOne(systemIdentifier, listOf(data.id, data.name))
-            if (ratio.score > currentRatio && ratio.score >= 50)
+            if (ratio.score > currentRatio && ratio.score >= 60)
             {
                 currentRatio = ratio.score
                 shipsystem = data
@@ -157,7 +157,7 @@ object CommandUtil
     }
 
     /**Removes any character after the cap*/
-    fun String.trimAfter(cap: Int) : String
+    fun String.trimAfter(cap: Int, addText: Boolean = true) : String
     {
         return if (this.length <= cap)
         {
@@ -165,6 +165,8 @@ object CommandUtil
         }
         else
         {
+            var text = ""
+            if (addText) text = "... (Cutoff)"
             this.substring(0, cap).trim() + "... (Cutoff)"
         }
     }

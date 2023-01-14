@@ -54,16 +54,22 @@ class ShowShip : BaseCommand()
         if (shipData == null) shipData = getFuzzyShip(modData.id, shipInput)
         if (shipData == null)
         {
-            interaction.deferEphemeralResponse().respond { content = "Unable to find ship going by \"$shipInput\" in ${modData.name}. The bot currently only considers the base ship, not variants or skins." }
+            interaction.deferEphemeralResponse().respond { content = "Unable to find ship going by \"$shipInput\" in ${modData.name}." }
             return
         }
         var shipsystemData: ShipsystemData? = null
         //Setup general data required for the card
         var shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.id }
+        if (shipData.baseHull != "")
+        {
+            shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.baseHull }
+        }
         try {
             shipsystemData = LoadedData.LoadedShipsystemData.get(modData.id)!!.find { it.id == shipData.systemID }
         }
         catch (e: Throwable) {}
+
+
         if (shipsystemData == null)
         {
             var allSystems = LoadedData.LoadedShipsystemData.flatMap { it.value }
@@ -84,9 +90,16 @@ class ShowShip : BaseCommand()
                 ?: return@forEach)  }
 
         var weaponSlots = ""
-        if (!shipData.weaponSlots.isNullOrEmpty())
+        var weaponMap: MutableMap<String, Int> = HashMap()
+        if (shipData.weaponSlots.isNotEmpty())
         {
-            for (weapon in shipData.weaponSlots.toSortedMap()!!)
+            for (weapon in shipData.weaponSlots)
+            {
+                var text = "${weapon.size}-${weapon.type}"
+                weaponMap.put(text, weaponMap.get(text)?.plus(1) ?: 1)
+            }
+
+            for (weapon in weaponMap.toSortedMap())
             {
                 weaponSlots += "``${weapon.key} x${weapon.value}``\n"
             }
@@ -111,7 +124,7 @@ class ShowShip : BaseCommand()
         if (shipData.fluxDissipation != "") stats += "Flux Dissipation: ``${shipData.fluxDissipation}``\n"
         if (shipData.maxSpeed != "") stats += "Max Speed: ``${shipData.maxSpeed}``\n"
         if (shipData.shieldType != "") stats += "Shield Type: ``${shipData.shieldType.lowercase().capitalize()}``\n"
-        if (shipData.shieldArc != "" && shipData.shieldArc != "0") stats += "Shield Arc: ``${shipData.shieldArc}``\n"
+        if (shipData.shieldArc != "" && shipData.shieldArc != "0" && shipData.shieldType.lowercase() != "none" && shipData.shieldType.lowercase() != "phase") stats += "Shield Arc: ``${shipData.shieldArc}``\n"
         if (shipData.shieldEfficiency != "" && shipData.shieldEfficiency != "0") stats += "Shield Efficiency: ``${shipData.shieldEfficiency}``\n"
         if (shipData.fighterBays != "") stats += "Fighter Bays: ``${shipData.fighterBays}``\n"
 
@@ -127,7 +140,9 @@ class ShowShip : BaseCommand()
                 title = "Ship: ${shipData.name}"
                 if (shipDescription != null)
                 {
-                    description = shipDescription.text1.trimAfter(500)
+                    var desc = shipDescription.text1
+                    if (shipData.skinDescription != "") desc = shipData.skinDescription + "\n\n" + shipDescription.text1
+                    description = desc.trimAfter(500)
                 }
 
                 if (generalData != "")

@@ -8,6 +8,8 @@ object DataPath
 
     var ShipCSV = "/data/hulls/ship_data.csv"
     var ShipFolder = "/data/hulls"
+    var SkinFolder = "/data/hulls/skins"
+
     var HullmodsCSV = "/data/hullmods/hull_mods.csv"
     var ShipSystemsCSV = "/data/shipsystems/ship_systems.csv"
 

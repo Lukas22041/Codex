@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
     var test3 = LoadedData.LoadedHullmodData
     var test4 = LoadedData.LoadedShipsystemData
 
-    var test6 = "LoadedData.LoadedWeaponData"
+    var test5 = ""
 
     println("\nFinished Loading Data in ${timeInMillis}ms for ${LoadedData.LoadedModData.size} mods")
     runBlocking(Dispatchers.Default) { BotMain().init() }
