@@ -2,13 +2,9 @@ package bot.util
 
 import bot.ButtonData
 import data.*
-import dev.kord.common.entity.ButtonStyle
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.builder.components.emoji
-import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.message.modify.InteractionResponseModifyBuilder
-import dev.kord.rest.builder.message.modify.actionRow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import me.xdrop.fuzzywuzzy.FuzzySearch
@@ -106,6 +102,7 @@ object CommandUtil
         return weapon
     }
 
+
     fun getFuzzyHullmod(source: String, hullmodIdentifier: String) : HullmodData?
     {
         println("\nAttempting Fuzzy Search for Hullmod with $hullmodIdentifier")
@@ -144,6 +141,25 @@ object CommandUtil
         return shipsystem
     }
 
+    fun getFuzzyStarmodder(modIdentifier: String) : StarmodderData?
+    {
+        println("\nAttempting Fuzzy Search for Mod with $modIdentifier")
+        var currentRatio = 0
+        var starmodderData: StarmodderData? = null
+        for (data in LoadedData.StarmodderData)
+        {
+            var ratio = FuzzySearch.extractOne(modIdentifier, listOf(data.name, data.name.abbreviate(), data.name.abbreviate2()))
+            if (ratio.score > currentRatio && ratio.score >= 80)
+            {
+                currentRatio = ratio.score
+                starmodderData = data
+            }
+        }
+        if (starmodderData != null) println("Fuzzy Search decided to pick starmodder mod ${starmodderData.name} with confidence $currentRatio\n") else println("No weapon found from Fuzzy\n")
+
+        return starmodderData
+    }
+
     fun addDeleteButton(response: InteractionResponseModifyBuilder, interaction: ChatInputCommandInteraction)
     {
         /*val emote = ReactionEmoji.Unicode("❌")
@@ -174,5 +190,20 @@ object CommandUtil
     fun String.abbreviate() : String
     {
         return this.replace("\\B.|\\P{L}".toRegex(), "").lowercase(Locale.getDefault())
+    }
+
+    fun String.abbreviate2() : String
+    {
+        var input = this
+        var words = input.split(" ")
+        var abbreviation = ""
+        for (word in words) {
+            var char: Char? = null
+            try {
+                char = word.get(0)
+                if (char.isUpperCase()) abbreviation += char
+            } catch (e: Throwable) {}
+        }
+        return abbreviation
     }
 }

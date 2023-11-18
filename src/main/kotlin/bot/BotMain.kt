@@ -1,36 +1,42 @@
 package bot
 
 import bot.commands.*
-import data.HullmodData
 import data.LoadedData
-import data.ModData
-import data.ShipData
-import dev.kord.common.Color
-import dev.kord.common.entity.ButtonStyle
-import dev.kord.common.entity.Permission
+import data.StarmodderData
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.builder.components.emoji
-import dev.kord.core.entity.ReactionEmoji
-import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildButtonInteractionCreateEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intent
 import dev.kord.gateway.PrivilegedIntent
-import dev.kord.rest.builder.interaction.string
-import dev.kord.rest.builder.message.modify.actionRow
-import dev.kord.rest.builder.message.modify.embed
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import me.xdrop.fuzzywuzzy.FuzzySearch
 import java.io.File
+import java.net.URL
+import java.util.*
+import kotlinx.coroutines.*
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import org.json.JSONArray
+import org.json.JSONObject
+import java.lang.Exception
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.system.measureTimeMillis
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.ExperimentalTime
+
 
 var token = File("bot-token.txt").readText().trim()
 
 class BotMain
 {
+    @OptIn(ExperimentalTime::class)
     suspend fun init()
     {
+
+
+
 
         var kord = Kord(token) {
 
@@ -38,6 +44,7 @@ class BotMain
 
         //Load Commands
         CodexInfo().init(kord, "codex", "Show Codex Bot Information")
+        StarmodderCommand().init(kord, "mod", "Searches through \"starmodder.pages.dev\" to look up data on a starsector mod")
         ShowShip().init(kord, "ship", "Displays ship data (Does not currently show skins or variants)")
         ShowWeapon().init(kord, "weapon", "Displays weapon data")
         ShowHullmod().init(kord, "hullmod", "Displays weapon data")
@@ -70,7 +77,67 @@ class BotMain
             println("\nBot Started")
         }
     }
+
+    suspend fun loadStarmodderData() {
+        while(true) {
+
+            var time = measureTimeMillis {
+                try {
+                    LoadedData.StarmodderData.clear()
+                    var stream = URL("https://raw.githubusercontent.com/wispborne/StarsectorModRepo/main/ModRepo.json").openStream()
+                    var scanner = Scanner(stream, "UTF-8").useDelimiter("\\A")
+                    var starmodderJson = scanner.next()
+
+                    var json = JSONObject(starmodderJson)
+
+                    var items = json.get("items") as JSONArray
+                    for (entry in items.iterator()) {
+                        if (entry !is JSONObject) continue
+
+                        var name = entry.get("name") as String
+                        var version = entry.opt("gameVersionReq") as String?
+                        var summary = entry.opt("summary") as String?
+                        var author = entry.opt("authors") as String?
+
+                        var urls = entry.get("urls")
+                        var downloadURL: String? = ""
+                        var forumURL: String? = ""
+                        var discordURL: String? = ""
+                        if (urls is JSONObject) {
+                            downloadURL = urls.opt("DownloadPage") as String?
+                            forumURL = urls.opt("Forum") as String?
+                            discordURL = urls.opt("Discord") as String?
+                        }
+
+                        var imageUrl: String? = ""
+                        var images = entry.opt("images")
+                        if (images is JSONObject) {
+                            for (id in images.keys()) {
+                                var image = images.get(id) ?: continue
+                                if (image !is JSONObject) continue
+                                imageUrl = image.opt("url") as String?
+                                break
+                            }
+                        }
+
+                        var data = StarmodderData(name, summary,  author, version, downloadURL, forumURL, discordURL, imageUrl)
+                        LoadedData.StarmodderData.add(data)
+                    }
+                } catch (e: Throwable) {
+                    println("Error after reloading Starmodder Json")
+                }
+            }
+
+
+
+            println("Reloaded Starmodder Json in ${time}ms")
+
+
+            delay(12.hours)
+        }
+    }
 }
+
 
 @Serializable
 data class ButtonData(val user: ULong, var buttonID: String)

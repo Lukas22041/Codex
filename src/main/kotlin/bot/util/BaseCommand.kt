@@ -16,7 +16,6 @@ abstract class BaseCommand()
 {
     suspend fun init(kord: Kord, commandID: String, commandDesc: String) {
         registerCommand(kord, commandID, commandDesc)
-
         kord.on<ChatInputCommandInteractionCreateEvent> {if (interaction.command.rootName == commandID) onCommandUse(interaction) }
     }
 

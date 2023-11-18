@@ -23,7 +23,6 @@ class ShowWeapon : BaseCommand()
     {
 
         kord.createGlobalChatInputCommand(commandID, commandDesc) {
-            string("source", "ID or Name of where a ship is from (i.e Starsector)") { required = true; }
             string("weapon", "name or id of the weapon") { required = true; }
             boolean("private", "Causes the message to only show for you.")
         }
@@ -33,7 +32,8 @@ class ShowWeapon : BaseCommand()
     {
         //Look for Mod and Weapon data
         val command = interaction.command
-        val modInput = command.strings["source"]!!
+        //val modInput = command.strings["source"]!!
+        val modInput = "Starsector"
         val weaponInput = command.strings["weapon"]!!
         var private = false
         try {
@@ -108,7 +108,9 @@ class ShowWeapon : BaseCommand()
         if (firerate != 0f) stats += "Rate of Fire: ``Every ${format.format(firerate)}s``\n"
         if (weaponData.range != "") stats += "Range: ``${weaponData.range}``\n"
 
-        if (weaponData.damagePerSecond != "") stats += "Damage/Second: ``${format.format((weaponData.damagePerSecond.toFloat() * (chargeup + burstSize)) / firerate)}``\n"
+
+        if (weaponData.damagePerSecond != "" && weaponData.damagePerSecond != "0") stats += "Damage/Second: ``${format.format((weaponData.damagePerSecond.toFloat()))}``\n"
+        else if (weaponData.damagePerSecond != "") stats += "Damage/Second: ``${format.format((weaponData.damagePerSecond.toFloat() * (chargeup + burstSize)) / firerate)}``\n"
         if (weaponData.damagePerShot != "") stats += "Damage/Shot: ``${weaponData.damagePerShot}$size``\n"
 
         if (weaponData.energyPerSecond != "" && weaponData.damagePerSecond != "" ) stats += "Flux/Damage: ``${format.format(weaponData.energyPerSecond.toFloat() / weaponData.damagePerSecond.toFloat())}``\n"

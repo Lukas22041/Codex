@@ -21,6 +21,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.6")
     implementation("org.slf4j:slf4j-simple:2.0.6")
     implementation("me.xdrop:fuzzywuzzy:1.4.0")
+    implementation("org.json:json:20231013")
 }
 
 

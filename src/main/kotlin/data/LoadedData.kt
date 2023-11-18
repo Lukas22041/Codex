@@ -14,7 +14,8 @@ data class ShipData(var name: String = "", var id: String = "", var designation:
                     var hullSize: String = "", var ordnancePoints: String = "", var deploymentPoints: String = "", var builtInMods: List<String>? = null, var weaponSlots: List<WeaponSlot> = ArrayList(),
                     var hitpoints: String = "", var armorRating: String = "", var maxFlux: String = "", var fluxDissipation: String = "",
                     var fighterBays: String = "", var maxSpeed: String = "", var shieldType: String = "", var shieldArc: String = "", var shieldEfficiency: String = "", var baseHull: String = "",
-                    var skinDescription: String = "")
+                    var skinDescription: String = "", var fuel: String,
+                    @SerialName("max burn") var maxBurn: String, @SerialName("base value") var baseValue: String, var cargo: String, var minCrew: String)
 
 @Serializable
 data class WeaponData(var name: String, var id: String, val range: String, @SerialName("damage/second") var damagePerSecond: String, @SerialName("damage/shot") var damagePerShot: String,
@@ -33,6 +34,9 @@ data class HullmodData(var name: String = "", var id: String = "", var tags: Str
 @Serializable
 data class ShipsystemData(var name: String = "", var id: String = "", val active: String = "", val cooldown: String = "", val toggle: String = "")
 
+
+data class StarmodderData(var name: String, val summary: String?, val author: String?, val gameVersion: String?, val downloadLink: String?, val forumLink: String?, val discordLink: String?, val imageURL: String?)
+
 object LoadedData
 {
     var LoadedModData: MutableList<ModData> = ArrayList()
@@ -44,5 +48,7 @@ object LoadedData
 
     var LoadedHullmodData: MutableMap<String, MutableList<HullmodData>> = HashMap()
     var LoadedShipsystemData: MutableMap<String, MutableList<ShipsystemData>> = HashMap()
+
+    var StarmodderData: MutableList<StarmodderData> = ArrayList()
 
 }

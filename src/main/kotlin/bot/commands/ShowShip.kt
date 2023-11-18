@@ -1,32 +1,24 @@
 package bot.commands
 
-import bot.ButtonData
 import bot.util.BaseCommand
 import bot.util.CommandUtil
-import bot.util.CommandUtil.getFuzzyMod
 import bot.util.CommandUtil.getFuzzyShip
 import bot.util.CommandUtil.trimAfter
 import data.*
 import dev.kord.common.Color
-import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.optional.optional
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.builder.components.emoji
-import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.boolean
 import dev.kord.rest.builder.interaction.string
-import dev.kord.rest.builder.message.modify.actionRow
 import dev.kord.rest.builder.message.modify.embed
-import kotlinx.serialization.json.Json
 
 class ShowShip : BaseCommand()
 {
     override suspend fun registerCommand(kord: Kord, commandID: String, commandDesc: String)
     {
         kord.createGlobalChatInputCommand(commandID, commandDesc) {
-            string("source", "ID or Name of where a ship is from (i.e Starsector)") { required = true}
             string("ship", "name or id of the ship") { required = true}
             boolean("private", "Causes the message to only show for you.")
         }
@@ -36,7 +28,8 @@ class ShowShip : BaseCommand()
     {
         //Look for Mod and Ship data
         val command = interaction.command
-        val modInput = command.strings["source"]!!
+        //val modInput = command.strings["source"]!!
+        val modInput = "Starsector"
         val shipInput = command.strings["ship"]!!
         var private = false
         try {
@@ -59,7 +52,7 @@ class ShowShip : BaseCommand()
         }
         var shipsystemData: ShipsystemData? = null
         //Setup general data required for the card
-        var shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.id }
+        var shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.id && it.type == "SHIP" }
         if (shipData.baseHull != "")
         {
             shipDescription = LoadedData.LoadedDescriptionData.get(modData.id)!!.find { it.id == shipData.baseHull }
@@ -117,6 +110,7 @@ class ShowShip : BaseCommand()
         if (shipData.ordnancePoints != "") generalData += "Ordnance Points: ``${shipData.ordnancePoints}``\n"
         if (shipData.deploymentPoints != "") generalData += "Deployment Points: ``${shipData.deploymentPoints}``\n"
 
+
         var stats = ""
         if (shipData.armorRating != "") stats += "Armor Rating: ``${shipData.armorRating}``\n"
         if (shipData.hitpoints != "") stats += "Hitpoints: ``${shipData.hitpoints}``\n"
@@ -127,6 +121,13 @@ class ShowShip : BaseCommand()
         if (shipData.shieldArc != "" && shipData.shieldArc != "0" && shipData.shieldType.lowercase() != "none" && shipData.shieldType.lowercase() != "phase") stats += "Shield Arc: ``${shipData.shieldArc}``\n"
         if (shipData.shieldEfficiency != "" && shipData.shieldEfficiency != "0") stats += "Shield Efficiency: ``${shipData.shieldEfficiency}``\n"
         if (shipData.fighterBays != "") stats += "Fighter Bays: ``${shipData.fighterBays}``\n"
+
+        var logisticsData = ""
+        if (shipData.cargo != "") logisticsData += "Cargo Storage: ``${shipData.cargo}``\n"
+        if (shipData.fuel != "") logisticsData += "Fuel Storage: ``${shipData.fuel}``\n"
+        if (shipData.minCrew != "") logisticsData += "Required Crew: ``${shipData.minCrew}``\n"
+        if (shipData.maxBurn != "") logisticsData += "Max Burn: ``${shipData.maxBurn}``\n"
+        if (shipData.baseValue != "") logisticsData += "Base Value: ``${shipData.baseValue}``\n"
 
         //Do the response to the command
         val response = when(private)
@@ -152,12 +153,21 @@ class ShowShip : BaseCommand()
                     inline = true
                 }
 
+                if (logisticsData != "")
+                field {
+                    name = "Logistics"
+                    value = logisticsData
+                    inline = true
+                }
+
                 if (stats != "")
                 field {
                     name = "Stats"
                     value = stats
                     inline = true
                 }
+
+
 
                 if (shipsystemDescription != null && shipsystemDescription!!.text1 != "")
                 {

@@ -2,9 +2,9 @@ import bot.BotMain
 import data.LoadedData
 import data.Loader
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
-import java.util.*
 import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
@@ -26,7 +26,12 @@ fun main(args: Array<String>) {
     var test5 = ""
 
     println("\nFinished Loading Data in ${timeInMillis}ms for ${LoadedData.LoadedModData.size} mods")
-    runBlocking(Dispatchers.Default) { BotMain().init() }
+    runBlocking(Dispatchers.Default) {
+
+        launch {
+            BotMain().loadStarmodderData()
+        }
+        BotMain().init() }
 }
 
 

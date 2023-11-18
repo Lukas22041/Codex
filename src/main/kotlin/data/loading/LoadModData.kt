@@ -15,7 +15,7 @@ class LoadModData
     {
         if (basefolder == "database/starsector-core")
         {
-            var data = ModData("starsector", "Starsector", "0.95.1a")
+            var data = ModData("starsector", "Starsector", "0.96a")
             LoadedData.LoadedModData.add(data)
             return data
         }

@@ -46,6 +46,7 @@ class Loader()
                     val timeInMillis = measureTimeMillis { LoadShipData(basefolder, mod.id).load()
                         var removalList: MutableList<ShipData> = ArrayList()
                         var list = LoadedData.LoadedShipData.get(mod.id)
+                        var test = list
                         list!!.forEach { data -> if (data.id == "" || data.name.contains("#") || data.name == "") removalList.add(data) }
                         LoadedData.LoadedShipData.get(mod.id)!!.removeAll(removalList) }
 
@@ -54,7 +55,7 @@ class Loader()
                 catch (e: Throwable)
                 {
                     println("Failed to load Ships for ${mod.id}")
-                    //println(e.printStackTrace())
+                    println(e.printStackTrace())
                 }
             }
 

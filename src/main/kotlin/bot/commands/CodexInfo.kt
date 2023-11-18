@@ -43,10 +43,10 @@ class CodexInfo : BaseCommand()
             list = "$list``"
             embed {
                 title = "Info"
-                description = "Codex is a bot that shows information about Starsector and the Content of different Mods by reading through the game files. Only mods listed in the \"Loaded Content\" section are currently included in the bots database."
+                description = "Codex is a bot that shows information about Starsector and some mod related data. "
 
                 field {
-                    name = "Commands"
+                    name = "Starsector Commands"
                     value = "``/ship <source> <ship id/name>``\n" +
                             "``/weapon <source> <weapon id/name>``\n" +
                             "``/hullmod <source> <hullmod id/name>``\n" +
@@ -55,15 +55,22 @@ class CodexInfo : BaseCommand()
                 }
 
                 field {
+                    name = "Starmodder Commands"
+                    value = "Used to look through **starmodder.pages.dev** to find mod related data.\n" +
+                            "``/mod <name> <ship id/name>``\n"
+                    inline = false
+                }
+
+                /*field {
                     name = "Adding Mods & Support"
-                    value = "If you are a mod author and want your mod added, or if you encounter an issue, have a question, or something along those lines, please message <@137237535700156416> in a private DM."
+                    value = "Currently not supporting mods, this may change again a while after mods have updated to 0.96."
                 }
 
                 field {
                     name = "Loaded Content"
                     value = list
                     inline = false
-                }
+                }*/
 
                 footer {
                     text = "Bot by @Lukas04#0856"

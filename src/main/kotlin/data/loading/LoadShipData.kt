@@ -17,11 +17,12 @@ import java.io.File
 class LoadShipData(var basepath: String, var modID: String)
 {
     @Serializable
-    private data class ShipCSVData(var name: String, var id: String, var designation: String, @SerialName("system id") var systemID: String, @SerialName("tech/manufacturer") var tech: String,
+    private data class ShipCSVData(var name: String = "", var id: String = "", var designation: String, @SerialName("system id") var systemID: String, @SerialName("tech/manufacturer") var tech: String,
                                    @SerialName("ordnance points") var ordnancePoints: String, @SerialName("supplies/rec") var deploymentPoints: String, var hitpoints: String,
                                    @SerialName("armor rating") var armorRating: String, @SerialName("max flux") var maxFlux: String, @SerialName("flux dissipation") var fluxDissipation: String,
                                    @SerialName("fighter bays") var fighterBays: String, @SerialName("max speed") var maxSpeed: String, @SerialName("shield type") var shieldType: String,
-                                   @SerialName("shield arc") var shieldArc: String, @SerialName("shield efficiency") var shieldEfficiency: String)
+                                   @SerialName("shield arc") var shieldArc: String, @SerialName("shield efficiency") var shieldEfficiency: String, var fuel: String,
+                                   @SerialName("max burn") var maxBurn: String, @SerialName("base value") var baseValue: String, var cargo: String, @SerialName("min crew") var minCrew: String)
     @Serializable
     private data class ShipJsonData(var hullId: String, var hullSize: String, var builtInMods: JsonArray? = null, var weaponSlots: JsonArray? = null)
 
@@ -68,16 +69,23 @@ class LoadShipData(var basepath: String, var modID: String)
                 while (text.indexOf('#') != -1) removeComments()
                 val strb: StringBuilder = StringBuilder(text)
                 val index = strb.lastIndexOf(",")
+
+                //Fixes trailing comma
                 strb.replace(index, ",".length + index, "")
+
                 text = strb.toString()
 
+                //Fixes issue where some mods use + in their values
+                text = text.replace("+", "")
+
                 try {
-                    var data = Json { this.encodeDefaults = true; ignoreUnknownKeys = true}.decodeFromString<ShipJsonData>(ShipJsonData.serializer(), text)
+                    var data = Json { this.encodeDefaults = true; ignoreUnknownKeys = true; isLenient = true}.decodeFromString<ShipJsonData>(ShipJsonData.serializer(), text)
                     JsonData.add(data)
                 }
                 catch (e: Throwable)
                 {
                     println("Error loading ${file.name}. Skipping.")
+                    //println(e.printStackTrace())
                 }
             }
         }
@@ -87,6 +95,7 @@ class LoadShipData(var basepath: String, var modID: String)
     {
         var jsonList: MutableList<ShipJsonData> = ArrayList()
 
+        if(!File(basepath + DataPath.SkinFolder).exists()) return
         var files = File(basepath + DataPath.SkinFolder).listFiles()!!.asList().toMutableList()
         var moreFiles: MutableList<File> = ArrayList()
         for (file in files)
@@ -105,9 +114,10 @@ class LoadShipData(var basepath: String, var modID: String)
                 val index = strb.lastIndexOf(",")
                 strb.replace(index, ",".length + index, "")
                 text = strb.toString()
+                text = text.replace("+", "")
 
                 try {
-                    var data = Json { this.encodeDefaults = true; ignoreUnknownKeys = true; this.isLenient = true}.decodeFromString<SkinJsonData>(SkinJsonData.serializer(), text)
+                    var data = Json {this.encodeDefaults = true; ignoreUnknownKeys = true; this.isLenient = true}.decodeFromString<SkinJsonData>(SkinJsonData.serializer(), text)
                     var ship: ShipData = (ships.find { it.id == data.baseHullId } ?: continue).copy()
 
                     ship.id = data.skinHullId
@@ -209,7 +219,8 @@ class LoadShipData(var basepath: String, var modID: String)
             var data = ShipData(id = csv.id, name = csv.name, designation = csv.designation, tech = csv.tech, hullSize = json.hullSize,
             builtInMods = builtinmods, weaponSlots = weaponSlots.toList(), systemID = csv.systemID, deploymentPoints = csv.deploymentPoints, ordnancePoints = csv.ordnancePoints,
             hitpoints = csv.hitpoints, armorRating = csv.armorRating, maxFlux = csv.maxFlux, fluxDissipation = csv.fluxDissipation, fighterBays = csv.fighterBays, maxSpeed = csv.maxSpeed,
-            shieldArc = csv.shieldArc, shieldType = csv.shieldType, shieldEfficiency = csv.shieldEfficiency)
+            shieldArc = csv.shieldArc, shieldType = csv.shieldType, shieldEfficiency = csv.shieldEfficiency, fuel = csv.fuel, baseValue = csv.baseValue, maxBurn = csv.maxBurn, cargo = csv.cargo,
+            minCrew = csv.minCrew)
 
             LoadedData.LoadedShipData.getOrPut(modID) { mutableListOf(data) }.add(data)
         }

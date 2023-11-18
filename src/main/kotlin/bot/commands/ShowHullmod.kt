@@ -1,34 +1,25 @@
 package bot.commands
 
-import bot.ButtonData
 import bot.util.BaseCommand
 import bot.util.CommandUtil
 import bot.util.CommandUtil.addDeleteButton
 import bot.util.CommandUtil.getFuzzyHullmod
-import bot.util.CommandUtil.getFuzzyMod
-import bot.util.CommandUtil.loadModData
 import bot.util.CommandUtil.trimAfter
 import data.LoadedData
 import dev.kord.common.Color
-import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.optional.optional
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.builder.components.emoji
-import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.boolean
 import dev.kord.rest.builder.interaction.string
-import dev.kord.rest.builder.message.modify.actionRow
 import dev.kord.rest.builder.message.modify.embed
-import kotlinx.serialization.json.Json
 
 class ShowHullmod : BaseCommand()
 {
     override suspend fun registerCommand(kord: Kord, commandID: String, commandDesc: String)
     {
         kord.createGlobalChatInputCommand(commandID, commandDesc) {
-            string("source", "ID or Name of where a ship is from (i.e Starsector)") { required = true}
             string("hullmod", "name or id of the weapon") { required = true}
             boolean("private", "Causes the message to only show for you.")
         }
@@ -38,7 +29,8 @@ class ShowHullmod : BaseCommand()
     {
         //Look for Mod and Weapon data
         val command = interaction.command
-        val modInput = command.strings["source"]!!
+        //val modInput = command.strings["source"]!!
+        val modInput = "Starsector"
         val hullmodInput = command.strings["hullmod"]!!
         var private = false
         try {
