@@ -74,7 +74,7 @@ class StarmodderCommand : BaseCommand()
 
                 if (data.author != null) {
                     footer {
-                        text = "Mod by ${data.author}"
+                        text = "Author: ${data.author}"
                     }
                 }
             }
